@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro — Cardinal Shalom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#1e3a5f;--brand:#0055d4;--brand-light:#e8f4fd;--brand-50:#f0f7ff;--brand-100:#dbeafe;--brand-200:#bfdbfe;--brand-500:#3b82f6;--brand-600:#2563eb;--brand-700:#1d4ed8;--slate:#475569;--slate-light:#94a3b8}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:linear-gradient(135deg,#f0f7ff 0%,#fff 60%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .auth-container{width:100%;max-width:480px}
+    .card{background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:32px;box-shadow:0 10px 40px rgba(0,0,0,0.08)}
+    .brand{text-align:center;margin-bottom:24px}
+    .brand-logo{width:56px;height:56px;border-radius:14px;background:var(--brand);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.2rem;margin:0 auto 12px;box-shadow:0 4px 12px rgba(0,85,212,0.25)}
+    .brand h1{font-size:1.4rem;font-weight:800;color:#1e293b}
+    .brand p{font-size:0.8rem;color:var(--slate);margin-top:4px}
+    .form-section{background:#fff;border-radius:12px;padding:24px}
+    .form-section-title{font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .form-section-title svg{width:20px;height:20px;color:var(--brand-600)}
+    .field{margin-bottom:16px}
+    .field label{display:block;font-size:0.8rem;font-weight:600;color:#1e293b;margin-bottom:6px}
+    .field input,.field select{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.875rem;font-family:'Outfit',sans-serif;background:#fff;transition:border-color 0.15s}
+    .field input:focus,.field select:focus{outline:none;border-color:var(--brand-500);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+    .field input[type=checkbox]{width:auto}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{width:100%;padding:12px;background:var(--brand);color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+    .btn:hover{background:var(--brand-600)}
+    .text-sm{font-size:0.8rem}.text-xs{font-size:0.75rem}
+    .text-slate-500{color:var(--slate)}.text-slate-400{color:var(--slate-light)}
+    .text-center{text-align:center}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mb-3{margin-bottom:12px}
+    .flex{display:flex}.items-center{align-items:center}.gap-2{gap:8px}.justify-between{justify-content:space-between}
+    .alert{padding:10px 14px;border-radius:8px;font-size:0.8rem;font-weight:500;margin-bottom:12px}
+    .alert-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+    .alert-warning{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+    .alert-success{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
+    .checkbox-label{display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:0.8rem;color:#334155}
+    .checkbox-label input{margin-top:3px}
+    .checkbox-label a{color:var(--brand-600)}
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="card">
+      <div class="brand">
+        <div class="brand-logo">CS</div>
+        <h1>Cardinal Shalom</h1>
+        <p>Plataforma Educativa Integral</p>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+          Registrarse como Estudiante
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/register">
+          <div class="field">
+            <label for="full_name">Nombre completo</label>
+            <input type="text" id="full_name" name="full_name" placeholder="Juan Pérez Rodríguez" required
+              style="font-size:0.9rem;padding:12px 14px;">
+          </div>
+
+          <div class="field">
+            <label for="email">Email institucional</label>
+            <input type="email" id="email" name="email" placeholder="estudiante@5to-a.cardinalshalom.edu.do" required
+              style="font-size:0.9rem;padding:12px 14px;">
+          </div>
+
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required minlength="6"
+              style="font-size:0.9rem;padding:12px 14px;">
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="grade_id">Graduación</label>
+              <select id="grade_id" name="grade_id" required>
+                <option value="">Seleccionar...</option>
+                {% for grade in grades %}
+                  <option value="{{ grade.id }}">{{ grade.name }} ({{ grade.school_year }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="field">
+              <label for="section_id">Sección</label>
+              <select id="section_id" name="section_id">
+                <option value="">Seleccionar...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field mt-3">
+            <label class="checkbox-label">
+              <input type="checkbox" name="accept_terms" required>
+              <span>He leído y acepto los <a href="#">téminos y condiciones</a> de uso de la plataforma.</span>
+            </label>
+            <p class="text-xs text-slate-400 mt-2">Al registrarte, aceptas que tu cuenta estará pendiente de aprobación por el administrador académico.</p>
+          </div>
+
+          <button type="submit" class="btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            Registrarse
+          </button>
+        </form>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;">
+        <span class="text-slate-500 text-sm">¿Ya tienes cuenta?</span>
+        <a href="/login" class="btn btn-secondary mt-2">Iniciar sesión</a>
+      </div>
+    </div>
+
+    <p class="text-xs text-slate-400 text-center mt-3">Politécnico Comercio y Marketing Digital · Beta 2026</p>
+  </div>
+
+  <script>
+    // Cargar secciones según grado seleccionado
+    const gradeSelect = document.getElementById('grade_id');
+    const sectionSelect = document.getElementById('section_id');
+    
+    if (gradeSelect && sectionSelect) {
+      gradeSelect.addEventListener('change', function() {
+        const gradeId = this.value;
+        if (!gradeId) {
+          sectionSelect.innerHTML = '<option value="">Seleccionar...</option>';
+          return;
+        }
+        
+        fetch('/api/sections/' + gradeId)
+          .then(r => r.json())
+          .then(sections => {
+            sectionSelect.innerHTML = '<option value="">Seleccionar...</option>' +
+              sections.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+          })
+          .catch(() => {
+            sectionSelect.innerHTML = '<option value="">Sin secciones</option>';
+          });
+      });
+    }
+  </script>
+</body>
+</html>

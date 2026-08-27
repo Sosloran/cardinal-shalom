@@ -1,0 +1,17 @@
+# Cardinal Shalom - Git ignore
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+*.log
+uploads/
+progress/
+*.pem
+*.key
+node_modules/
+.DS_Store
+Thumbs.db

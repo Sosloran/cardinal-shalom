@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Ranking — Cardinal Shalom{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    :root {
+      --navy: #1e3a5f;
+      --brand: #0055d4;
+      --brand-light: #e8f4fd;
+      --brand-50: #f0f7ff;
+      --brand-100: #dbeafe;
+      --brand-200: #bfdbfe;
+      --brand-500: #3b82f6;
+      --brand-600: #2563eb;
+      --brand-700: #1d4ed8;
+      --slate: #475569;
+      --slate-light: #94a3b8;
+      --gold: #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #b45309;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: #fff; min-height: 100vh; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .page-header { padding: 16px 0 8px; border-bottom: 1px solid #e2e8f0; margin-bottom: 24px; }
+    .page-header h1 { font-size: 1.75rem; font-weight: 700; color: #1e293b; }
+    .page-header p { color: var(--slate); margin-top: 4px; font-size: 0.95rem; }
+    .card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .badge-info { background: var(--brand-100); color: var(--brand-700); }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; text-decoration: none; border: 1px solid transparent; transition: all 0.15s; }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: var(--brand-600); }
+    .btn-secondary { background: #fff; color: var(--slate); border-color: #cbd5e1; }
+    .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-4 { margin-top: 16px; }
+    .mt-6 { margin-top: 24px; }
+    .mb-3 { margin-bottom: 12px; }
+    .mb-4 { margin-bottom: 16px; }
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-slate-500 { color: var(--slate); }
+    .text-slate-400 { color: var(--slate-light); }
+    .text-slate-700 { color: #334155; }
+    .text-slate-800 { color: #1e293b; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .text-brand-600 { color: var(--brand-600); }
+    .text-brand-700 { color: var(--brand-700); }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rounded-lg { border-radius: 8px; }
+    .p-4 { padding: 16px; }
+    .p-5 { padding: 20px; }
+    .w-full { width: 100%; }
+    .flex-wrap { flex-wrap: wrap; }
+    .flex-1 { flex: 1; }
+    .min-w-0 { min-width: 0; }
+    .hover\:text-brand-700:hover { color: var(--brand-700); }
+    .transition { transition: all 0.15s; }
+    .inline-block { display: inline-block; }
+    .relative { position: relative; }
+    .z-10 { z-index: 10; }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .hover\:shadow-xl:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); }
+    .text-center { text-align: center; }
+    .text-amber-600 { color: #d97706; }
+    .text-green-600 { color: #16a34a; }
+    .text-blue-600 { color: #2563eb; }
+    .text-red-500 { color: #ef4444; }
+  </style>
+</head>
+<body>
+  {# Navbar #}
+  <nav class="navbar" style="background:#fff;border-bottom:1px solid #e2e8f0;">
+    <div class="container">
+      <div class="flex items-center justify-between" style="padding:12px 0;">
+        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#1e293b;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:0.85rem;">CS</div>
+          <div>
+            <div style="font-weight:600;font-size:0.95rem;">Cardinal Shalom</div>
+            <div style="font-size:0.7rem;color:var(--slate-light);">Plataforma Educativa</div>
+          </div>
+        </a>
+        <div class="flex items-center gap-3">
+          {% if session.get("user_id") %}
+          <span style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--brand-700);font-size:0.85rem;">{{ (user.full_name[0] if user else '?').upper() }}</div>
+            <span style="font-weight:600;font-size:0.85rem;color:#1e293b;">{{ user.full_name }}</span>
+          </span>
+          <a href="/logout" class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;">Cerrar sesión</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top:24px;">
+    <div class="page-header">
+      <h1>🏆 Ranking Competitivo</h1>
+      <p>Tabla de posiciones de tu grado — filtrada por materia o vista general.</p>
+    </div>
+
+    {# Filtros #}
+    <div class="card mb-4">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+          <span class="badge badge-info">{{ my_grade_name }}</span>
+          <span class="text-sm text-slate-500">{{ total_students }} estudiantes</span>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <a href="/ranking" class="btn {% if not selected_subject %}btn-primary{% else %}btn-secondary{% endif %}" style="font-size:0.8rem;padding:6px 14px;">
+            📊 General
+          </a>
+          {% for subj in subjects %}
+            <a href="/ranking?subject={{ subj.id }}" class="btn {% if selected_subject and selected_subject.id == subj.id %}btn-primary{% else %}btn-secondary{% endif %}" style="font-size:0.8rem;padding:6px 14px;">
+              {{ subj.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {# Ranking Table #}
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-size:1.25rem;">🏆</div>
+        <div>
+          <h2 style="font-size:1.05rem;font-weight:700;color:#1e293b;">Tabla de Posiciones — {{ selected_subject.name if selected_subject else 'General' }}</h2>
+          <p style="font-size:0.8rem;color:var(--slate);">Ordenadas por promedio general descendente</p>
+        </div>
+      </div>
+
+      {% if ranking %}
+        <div class="overflow-x-auto">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:var(--brand-50);border-bottom:2px solid var(--brand-200);">
+                <th style="padding:12px 16px;text-align:left;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate);font-weight:700;width:48px;">#</th>
+                <th style="padding:12px 16px;text-align:left;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate);font-weight:700;">Estudiante</th>
+                <th style="padding:12px 16px;text-align:center;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate);font-weight:700;width:80px;">Nota</th>
+                <th style="padding:12px 16px;text-align:center;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate);font-weight:700;width:80px;">Entregas</th>
+                <th style="padding:12px 16px;text-align:center;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate);font-weight:700;width:100px;">Promedio</th>
+                <th style="padding:12px 16px;text-align:center;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate);font-weight:700;width:100px;">Ránking</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for item in ranking %}
+              <tr style="border-bottom:1px solid #f1f5f9;transition:background 0.15s;" class="rank-animate">
+                <td style="padding:12px 16px;text-align:left;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    {% if loop.index <= 3 %}
+                      <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:#fff;{% if loop.index == 1 %}background:#f59e0b{% elif loop.index == 2 %}background:#94a3b8{% else %}background:#b45309{% endif %};">{{ loop.index }}</span>
+                    {% else %}
+                      <span style="width:24px;height:24px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:var(--slate);">{{ loop.index }}</span>
+                    {% endif %}
+                  </div>
+                </td>
+                <td style="padding:12px 16px;text-align:left;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--brand-700);font-size:0.85rem;flex-shrink:0;">{{ item.full_name[0] if item.full_name else '?' }}</div>
+                    <div>
+                      <div style="font-weight:600;font-size:0.875rem;color:#1e293b;">{{ item.full_name }}</div>
+                      <div style="font-size:0.7rem;color:var(--slate-light);">{{ item.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="padding:12px 16px;text-align:center;">
+                  <span style="font-weight:700;font-size:1.1rem;color:#1e293b;">{{ item.total_score if item.total_score else '—' }}</span>
+                </td>
+                <td style="padding:12px 16px;text-align:center;">
+                  <span style="font-size:0.85rem;color:var(--slate);">{{ item.deliveries if item.deliveries else 0 }}/{{ item.total_tasks if item.total_tasks else 0 }}</span>
+                </td>
+                <td style="padding:12px 16px;text-align:center;">
+                  <span style="font-weight:700;font-size:1.05rem;{% if item.average >= 80 %}color:#16a34a{% elif item.average >= 60 %}color:#d97706{% else %}color:#ef4444{% endif %};">
+                    {{ "%.1f"|format(item.average) if item.average else '—' }}
+                  </span>
+                </td>
+                <td style="padding:12px 16px;text-align:center;">
+                  <span class="badge {% if loop.index == 1 %}bg-amber-100 text-amber-800{% elif loop.index == 2 %}bg-slate-100 text-slate-800{% elif loop.index == 3 %}bg-orange-100 text-orange-800{% else %}badge-info{% endif %}" style="padding:2px 10px;border-radius:9999px;font-size:0.7rem;font-weight:700;{% if loop.index == 1 %}background:#f59e0b;color:#fff;{% elif loop.index == 2 %}background:#94a3b8;color:#fff;{% elif loop.index == 3 %}background:#b45309;color:#fff;{% endif %}">
+                    {{ loop.index }}
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div style="text-align:center;padding:48px 16px;color:var(--slate);">
+          <div style="font-size:3rem;margin-bottom:12px;">🏆</div>
+          <p style="font-size:0.9rem;font-weight:600;">No hay datos de ranking aún</p>
+          <p style="font-size:0.8rem;color:var(--slate-light);margin-top:4px;">Las calificaciones aparecerán cuando los docentes comiencen a evaluar.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    {# Mejor Estudiante #}
+    {% if best_student %}
+      <div class="card mt-4" style="background:linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);border-color:#fde68a;border-width:2px;">
+        <div class="flex items-center gap-4">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;box-shadow:0 4px 12px rgba(245,158,11,0.3);">👑</div>
+          <div>
+            <div style="font-size:1.2rem;font-weight:800;color:#92400e;">🌟 Mejor Estudiante del Grado</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+              <span style="font-size:1.5rem;font-weight:800;color:#1e293b;">{{ best_student.full_name }}</span>
+              <span class="badge" style="background:var(--gold);color:#fff;padding:2px 10px;border-radius:9999px;font-size:0.7rem;font-weight:700;">#1</span>
+            </div>
+            <p style="font-size:0.8rem;color:#78350f;margin-top:4px;">Promedio: <strong>{{ "%.1f"|format(best_student.average) }}</strong> — {{ best_student.subjects }} materias con calificaciones</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div style="text-align:center;padding:24px 0 48px;color:var(--slate-light);font-size:0.8rem;">
+      Cardinal Shalom — Plataforma Educativa Integral · Beta 2026
+    </div>
+  </div>
+
+  <script>
+    // Animación de entrada para filas del ranking
+    document.querySelectorAll('.rank-animate').forEach((row, i) => {
+      row.style.opacity = '0';
+      row.style.transform = 'translateY(12px)';
+      setTimeout(() => {
+        row.style.transition = 'all 0.3s ease';
+        row.style.opacity = '1';
+        row.style.transform = 'translateY(0)';
+      }, 100 * i);
+    });
+  </script>
+</body>
+</html>

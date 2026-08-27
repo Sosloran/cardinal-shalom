@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}Completivo — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-[#f8fafc]">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-full bg-[#22c55e]/20 flex items-center justify-center text-xl">👨‍🏫</div>
+      <div>
+        <h1 class="text-2xl font-bold text-[#1e3a5f]">Gestion de Biblioteca</h1>
+        <p class="text-slate-500 mt-1">Agrega libros del MINERD y cursos practicos para los estudiantes.</p>
+      </div>
+      <span class="badge badge-success">Teacher</span>
+    </div>
+
+    <div class="grid-2 gap-6">
+      <!-- Libros -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="form-section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Libros MINERD
+          </div>
+          <button onclick="openBookModal()" class="btn-primary btn-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            Agregar Libro
+          </button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Libro</th>
+                <th>Asignatura</th>
+                <th>Grado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+              <tr>
+                <td class="text-slate-500">{{ book.subject }}</td>
+                <td class="text-slate-500">{% if book.grade_id and grades_by_id[book.grade_id] %}{{ grades_by_id[book.grade_id].name }}{% else %}—{% endif %}</td>
+                <td class="text-slate-400 text-xs">
+                  {% if book.file_url %}
+                    <a href="{{ book.file_url }}" target="_blank" class="text-[#2d6da8] hover:underline">Abrir →</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- Cursos -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="form-section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Cursos Practicos
+          </div>
+          <button onclick="openCourseModal()" class="btn-primary btn-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            Agregar Curso
+          </button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Curso</th>
+                <th>Tipo</th>
+                <th>Grado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for course in courses %}
+              <tr>
+                <td class="font-medium text-[#1e3a5f]">{{ course.title }}</td>
+                <td><span class="badge badge-info">{{ course.type }}</span></td>
+                <td class="text-slate-500">{% if course.grade_id and grades_by_id[course.grade_id] %}{{ grades_by_id[course.grade_id].name }}{% else %}—{% endif %}</td>
+                <td class="text-slate-400 text-xs">
+                  {% if course.type == 'youtube' %}
+                    <a href="{{ course.url }}" target="_blank" class="text-[#f5b342] hover:underline">Abrir →</a>
+                  {% else %}
+                    <a href="{{ course.url }}" class="text-[#2d6da8] hover:underline">Reproducir →</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Book Modal -->
+<div id="bookModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+    <h3 class="text-lg font-semibold text-[#1e3a5f] mb-4">Agregar Libro MINERD</h3>
+    <form id="bookForm" onsubmit="saveBook(event)">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Titulo del libro</label>
+          <input id="bookTitle" type="text" required class="input" placeholder="Matematicas 5to - MINERD">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Asignatura</label>
+          <input id="bookSubject" type="text" required class="input" placeholder="Matematicas">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Grado</label>
+          <select id="bookGrade" required class="input">
+            <option value="">— Selecciona —</option>
+            {% for g in grades %}
+              <option value="{{ g.id }}">{{ g.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">URL de portada (opcional)</label>
+          <input id="bookCover" type="url" class="input" placeholder="https://ejemplo.edu.do/cover.jpg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">URL del libro (PDF/online)</label>
+          <input id="bookFile" type="url" class="input" placeholder="https://minerd.gob.do/libros/matematicas5to.pdf">
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="submit" class="btn-primary flex-1">Guardar Libro</button>
+        <button type="button" onclick="closeBookModal()" class="btn-secondary flex-1">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Course Modal -->
+<div id="courseModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+    <h3 class="text-lg font-semibold text-[#1e3a5f] mb-4">Agregar Curso Practico</h3>
+    <form id="courseForm" onsubmit="saveCourse(event)">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Titulo del curso</label>
+          <input id="courseTitle" type="text" required class="input" placeholder="Comercio y Marketing Digital">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Descripcion</label>
+          <textarea id="courseDesc" class="input" rows="2" placeholder="Breve descripcion..."></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">URL del curso (YouTube / archivo)</label>
+          <input id="courseUrl" type="url" required class="input" placeholder="https://www.youtube.com/playlist?...">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
+          <select id="courseType" class="input">
+            <option value="youtube">YouTube</option>
+            <option value="uploaded">Archivo subido</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Grado</label>
+          <select id="courseGrade" required class="input">
+            <option value="">— Selecciona —</option>
+            {% for g in grades %}
+              <option value="{{ g.id }}">{{ g.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Miniatura (opcional)</label>
+          <input id="courseThumb" type="url" class="input" placeholder="https://ejemplo.edu.do/thumb.jpg">
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="submit" class="btn-primary flex-1">Guardar Curso</button>
+        <button type="button" onclick="closeCourseModal()" class="btn-secondary flex-1">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openBookModal() { document.getElementById('bookModal').classList.remove('hidden'); }
+  function closeBookModal() { document.getElementById('bookModal').classList.add('hidden'); }
+  function saveBook(e) {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('title', document.getElementById('bookTitle').value);
+    data.append('subject', document.getElementById('bookSubject').value);
+    data.append('grade_id', document.getElementById('bookGrade').value);
+    data.append('cover_url', document.getElementById('bookCover').value);
+    data.append('file_url', document.getElementById('bookFile').value);
+    fetch('/teacher/library/book/new', { method: 'POST', body: data })
+      .then(() => { closeBookModal(); location.reload(); })
+      .catch(err => alert('Error: ' + err.message));
+  }
+
+  function openCourseModal() { document.getElementById('courseModal').classList.remove('hidden'); }
+  function closeCourseModal() { document.getElementById('courseModal').classList.add('hidden'); }
+  function saveCourse(e) {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('title', document.getElementById('courseTitle').value);
+    data.append('description', document.getElementById('courseDesc').value);
+    data.append('url', document.getElementById('courseUrl').value);
+    data.append('type', document.getElementById('courseType').value);
+    data.append('grade_id', document.getElementById('courseGrade').value);
+    data.append('thumbnail_url', document.getElementById('courseThumb').value);
+    fetch('/teacher/library/course/new', { method: 'POST', body: data })
+      .then(() => { closeCourseModal(); location.reload(); })
+      .catch(err => alert('Error: ' + err.message));
+  }
+</script>
+{% endblock %}

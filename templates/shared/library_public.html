@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Biblioteca Publica — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-[#f8fafc]">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-full bg-[#e8f0f8] flex items-center justify-center text-2xl">📚</div>
+      <div>
+        <h1 class="text-2xl font-bold text-[#1e3a5f]">Biblioteca — Cardinal Shalom</h1>
+        <p class="text-slate-500 mt-1">Libros de texto oficiales del MINERD y cursos practicos.</p>
+      </div>
+    </div>
+
+    <div class="grid-2 gap-8">
+      <div>
+        <div class="form-section">
+          <div class="form-section-title flex items-center justify-between">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              Libros del MINERD
+            </div>
+            <span class="badge badge-success">{{ books|length }}</span>
+          </div>
+          {% if books %}
+            <div class="space-y-3">
+            {% for book in books %}
+              <div class="flex items-center gap-3 p-3 bg-[#f8fafc] rounded-lg border border-[#e2e8f0]">
+                <div class="w-10 h-10 rounded bg-[#2d6da8]/10 flex items-center justify-center text-xl">📖</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-[#1e3a5f] truncate">{{ book.title }}</div>
+                  <div class="text-xs text-slate-400">{{ book.subject }} · {{ book.grade.name if book.grade else 'Grado' }}</div>
+                </div>
+                {% if book.file_url %}
+                  <a href="{{ book.file_url }}" target="_blank" class="text-xs text-[#2d6da8] font-medium hover:underline flex-shrink-0">Abrir →</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+            </div>
+          {% else %}
+            <div class="p-4 text-center text-slate-400 text-sm">No hay libros disponibles.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div>
+        <div class="form-section">
+          <div class="form-section-title flex items-center justify-between">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              Cursos Practicos
+            </div>
+            <span class="badge badge-success">{{ courses|length }}</span>
+          </div>
+          {% if courses %}
+            <div class="space-y-3">
+            {% for course in courses %}
+              <div class="flex items-center gap-3 p-3 bg-[#f8fafc] rounded-lg border border-[#e2e8f0]">
+                <div class="w-10 h-10 rounded bg-[#bbf7d0]/20 flex items-center justify-center text-xl">🎓</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-[#1e3a5f] truncate">{{ course.title }}</div>
+                  <div class="text-xs text-slate-400">{{ course.type }} · {{ course.grade.name if course.grade else 'Grado' }}</div>
+                </div>
+                <a href="{{ course.url }}" target="_blank" class="text-xs text-[#f5b342] font-medium hover:underline flex-shrink-0">Abrir →</a>
+              </div>
+            {% endfor %}
+            </div>
+          {% else %}
+            <div class="p-4 text-center text-slate-400 text-sm">No hay cursos disponibles.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

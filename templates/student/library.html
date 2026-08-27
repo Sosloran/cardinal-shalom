@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Mi Biblioteca — Cardinal Shalom{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    :root {
+      --navy: #1e3a5f;
+      --brand: #0055d4;
+      --brand-light: #e8f4fd;
+      --brand-50: #f0f7ff;
+      --brand-100: #dbeafe;
+      --brand-200: #bfdbfe;
+      --brand-500: #3b82f6;
+      --brand-600: #2563eb;
+      --brand-700: #1d4ed8;
+      --slate: #475569;
+      --slate-light: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: #fff; min-height: 100vh; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .page-header { padding: 16px 0 8px; border-bottom: 1px solid #e2e8f0; margin-bottom: 24px; }
+    .page-header h1 { font-size: 1.75rem; font-weight: 700; color: #1e293b; }
+    .page-header p { color: var(--slate); margin-top: 4px; font-size: 0.95rem; }
+    .card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .badge-info { background: var(--brand-100); color: var(--brand-700); }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; text-decoration: none; border: 1px solid transparent; transition: all 0.15s; }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: var(--brand-600); }
+    .btn-secondary { background: #fff; color: var(--slate); border-color: #cbd5e1; }
+    .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-4 { margin-top: 16px; }
+    .mt-6 { margin-top: 24px; }
+    .mb-3 { margin-bottom: 12px; }
+    .mb-4 { margin-bottom: 16px; }
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-slate-500 { color: var(--slate); }
+    .text-slate-400 { color: var(--slate-light); }
+    .text-slate-700 { color: #334155; }
+    .text-slate-800 { color: #1e293b; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .text-brand-500 { color: var(--brand-500); }
+    .text-brand-600 { color: var(--brand-600); }
+    .text-brand-700 { color: var(--brand-700); }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rounded-lg { border-radius: 8px; }
+    .p-4 { padding: 16px; }
+    .p-5 { padding: 20px; }
+    .w-full { width: 100%; }
+    .flex-wrap { flex-wrap: wrap; }
+    .flex-1 { flex: 1; }
+    .min-w-0 { min-width: 0; }
+    .hover\:text-brand-700:hover { color: var(--brand-700); }
+    .transition { transition: all 0.15s; }
+    .inline-block { display: inline-block; }
+    .relative { position: relative; }
+    .z-10 { z-index: 10; }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .hover\:shadow-xl:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); }
+  </style>
+</head>
+<body>
+  {# Navbar #}
+  <nav class="navbar" style="background:#fff;border-bottom:1px solid #e2e8f0;">
+    <div class="container">
+      <div class="flex items-center justify-between" style="padding:12px 0;">
+        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#1e293b;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:0.85rem;">CS</div>
+          <div>
+            <div style="font-weight:600;font-size:0.95rem;">Cardinal Shalom</div>
+            <div style="font-size:0.7rem;color:var(--slate-light);">Plataforma Educativa</div>
+          </div>
+        </a>
+        <div class="flex items-center gap-3">
+          {% if session.get("user_id") %}
+          <span style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--brand-700);font-size:0.85rem;">{{ (user.full_name[0] if user else '?').upper() }}</div>
+            <span style="font-weight:600;font-size:0.85rem;color:#1e293b;">{{ user.full_name }}</span>
+          </span>
+          <a href="/logout" class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;">Cerrar sesión</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top:24px;">
+    <div class="page-header">
+      <h1>📚 Mi Biblioteca</h1>
+      <p>Libros del MINERD y cursos prácticos disponibles para tu grado.</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:24px;">
+      {# Libros MINERD #}
+      <div class="card">
+        <div class="flex items-center gap-3 mb-4" style="padding-bottom:16px;border-bottom:1px solid #e2e8f0;">
+          <div style="width:40px;height:40px;border-radius:10px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:1.25rem;">📖</div>
+          <div>
+            <h2 style="font-size:1.1rem;font-weight:700;color:#1e293b;">Libros de Texto — MINERD</h2>
+            <p style="font-size:0.8rem;color:var(--slate);">Material oficial organizado por grado</p>
+          </div>
+        </div>
+        {% if books %}
+          <div class="space-y-2">
+          {% for book in books %}
+            <a href="{{ book.file_url }}" target="_blank" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;border:1px solid #e2e8f0;text-decoration:none;color:inherit;transition:all 0.15s;" class="book-item">
+              <div style="width:36px;height:36px;border-radius:6px;background:var(--brand-50);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">📕</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:600;font-size:0.875rem;color:#1e293b;truncate;">{{ book.title }}</div>
+                <div style="font-size:0.75rem;color:var(--slate);margin-top:2px;">{{ book.subject }}</div>
+              </div>
+              <span class="badge badge-info" style="flex-shrink:0;">Ver</span>
+            </a>
+          {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align:center;padding:32px 16px;color:var(--slate);">
+            <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+            <p style="font-size:0.9rem;">No hay libros disponibles para este grado aún.</p>
+          </div>
+        {% endif %}
+      </div>
+
+      {# Cursos Prácticos #}
+      <div class="card">
+        <div class="flex items-center gap-3 mb-4" style="padding-bottom:16px;border-bottom:1px solid #e2e8f0;">
+          <div style="width:40px;height:40px;border-radius:10px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.25rem;">🎓</div>
+          <div>
+            <h2 style="font-size:1.1rem;font-weight:700;color:#1e293b;">Cursos Prácticos</h2>
+            <p style="font-size:0.8rem;color:var(--slate);">Aprende habilidades digitales y comerciales</p>
+          </div>
+        </div>
+        {% if courses %}
+          <div class="space-y-2">
+          {% for course in courses %}
+            <a href="{{ course.url }}" target="_blank" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;border:1px solid #e2e8f0;text-decoration:none;color:inherit;transition:all 0.15s;">
+              <div style="width:36px;height:36px;border-radius:6px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎯</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:600;font-size:0.875rem;color:#1e293b;truncate;">{{ course.title }}</div>
+                <div style="font-size:0.75rem;color:var(--slate);margin-top:2px;">{{ course.description[:80] }}{% if course.description|length > 80 %}...{% endif %}</div>
+              </div>
+              <span class="badge badge-success" style="flex-shrink:0;">Iniciar</span>
+            </a>
+          {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align:center;padding:32px 16px;color:var(--slate);">
+            <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+            <p style="font-size:0.9rem;">No hay cursos disponibles para este grado aún.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:24px 0 48px;color:var(--slate-light);font-size:0.8rem;">
+      Cardinal Shalom — Plataforma Educativa Integral · Beta 2026
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.book-item').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        el.style.borderColor = 'var(--brand-200)';
+        el.style.background = 'var(--brand-50)';
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.borderColor = '#e2e8f0';
+        el.style.background = '#fff';
+      });
+    });
+  </script>
+</body>
+</html>

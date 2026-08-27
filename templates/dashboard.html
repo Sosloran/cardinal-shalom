@@ -1,0 +1,628 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen relative overflow-hidden">
+  <div class="fixed inset-0 bg-gradient-to-br from-white via-[#eef5ff] to-[#f8fafc]"></div>
+  <div class="particle-field absolute inset-0 pointer-events-none opacity-20"></div>
+  <div class="wave-bg"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar relative z-10">
+    <div class="px-5 pb-3">
+      <div class="flex items-center gap-3 mb-1">
+        <div class="logo-svg-inline">
+          <img src="/static/img/logo.svg" alt="Cardinal Shalom" width="36" height="36">
+        </div>
+        <span class="font-semibold text-sm text-slate-800">Cardinal Shalom</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section-title">Menu Principal</div>
+
+    <a href="{{ url_for('dashboard') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('dashboard') }}">
+      <span>🏠</span> Dashboard
+    </a>
+    <a href="{{ url_for('student_library') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('student_library') }}">
+      <span>📚</span> Biblioteca
+    </a>
+    <a href="{{ url_for('student_my_tasks') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('student_my_tasks') }}">
+      <span>📝</span> Mis Tareas
+    </a>
+    <a href="{{ url_for('student_my_grades') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('student_my_grades') }}">
+      <span>📊</span> Mis Notas
+    </a>
+    <a href="{{ url_for('student_portfolio') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('student_portfolio') }}">
+      <span>🎒</span> Portafolio
+    </a>
+    <a href="{{ url_for('student_ranking') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('student_ranking') }}">
+      <span>🏆</span> Ranking
+    </a>
+    <a href="{{ url_for('student_renewal_request') }}" class="sidebar-nav-item {{ 'active' if request.path == url_for('student_renewal_request') }}">
+      <span>🎓</span> Renovar Grado
+    </a>
+
+    {% if mode == 'vacations' %}
+      <div class="mt-4 p-3 bg-[#0d2847]/80 rounded-xl border border-[#3394ff]/20 backdrop-blur-sm">
+        <div class="flex items-center gap-2 text-sm font-semibold text-[#8ab4f8] mb-1">📚 Modo Vacaciones</div>
+        <p class="text-xs text-[#9bb0cc] opacity-80">Preparación para el próximo año disponible en tu panel.</p>
+      </div>
+    {% endif %}
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 p-6 lg:p-8 relative z-10">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- Header del dashboard -->
+      <div class="mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800 flash-animation">Dashboard</h1>
+          <p class="text-sm text-slate-500 mt-1">Bienvenido, {{ user.full_name }} · {{ my_grade_name if my_grade_name else 'Administrador' }}</p>
+        </div>
+
+        <div class="flex items-center gap-3 mt-4">
+          {% if user.role == 'super_admin' %}
+            <button onclick="toggleSystemMode()" class="btn-primary btn-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 00.77.089l3.441 2.382c.426 1.466.043 3.232-1.756 3.232H8.054l-1.08 2.925c-.426 1.466-1.922 1.466-2.348 0l-3.44-2.382a1.724 1.724 0 00-.77-.089l-2.88-2.382M12 12h13M12 12a4 4 0 00-4 4m0 0v6m0 0a2 2 0 012 2h4a2 2 0 012-2v-6a2 2 0 01-2-2"/></svg>
+              {% if mode == 'vacations' %}Activar Modo Normal{% else %}Activar Modo Vacaciones{% endif %}
+            </button>
+          {% endif %}
+
+          <div class="flex items-center gap-2 text-sm text-slate-500">
+            Modo actual:
+            <span class="badge {% if mode == 'vacations' %}badge-warning{% else %}badge-success{% endif %}">
+              {% if mode == 'vacations' %}📚 Vacaciones/Retroalimentación{% else %}📖 Normal{% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido segun rol -->
+      {% if user.role == 'super_admin' %}
+        {# Super Admin Dashboard #}
+        <div class="grid-2">
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">👨‍🎓</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ total_students }}</div>
+                <div class="text-sm text-slate-500">Estudiantes activos</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-200/30 flex items-center justify-center text-2xl">⏳</div>
+              <div>
+                <div class="text-2xl font-bold text-amber-600">{{ total_pending }}</div>
+                <div class="text-sm text-slate-500">Registros pendientes</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">👨‍🏫</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ total_teachers }}</div>
+                <div class="text-sm text-slate-500">Profesores activos</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">📰</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ total_activities }}</div>
+                <div class="text-sm text-slate-500">Actividades publicadas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+              Panel No-Code
+            </div>
+            <div class="flex items-center gap-4">
+              <a href="{{ url_for('admin_no_code') }}" class="btn-primary btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                Gestionar Grados, Secciones, Materias
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+            <div class="mt-6">
+              <div class="form-section">
+                <div class="form-section-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                  Mis Notas en Tiempo Real
+                </div>
+                <div class="text-sm text-slate-500 mb-3">
+                  Consulta tus calificaciones más recientes. Para más detalle, visita el módulo de notas.
+                </div>
+                        {% if my_grades_preview %}
+                          <div class="grid-3 gap-4">
+                            {% for grade in my_grades_preview %}
+                              <div class="card p-4 flex-1 min-w-[140px]">
+                                <div class="flex items-center justify-between mb-2">
+                                  <span class="badge badge-info">{{ grade.subject.name }}</span>
+                                  <span class="font-bold text-lg {% if grade.overall_score >= 70 %}text-green-600{% else %}text-amber-600{% endif %}">{{ grade.overall_score }}</span>
+                                </div>
+                                <div class="text-xs text-slate-500">Promedio actual</div>
+                                <div class="mt-2 h-2 bg-brand-100 rounded-full overflow-hidden">
+                                  <div class="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600" style="width: {{ grade.overall_score }}%"></div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        </div>
+                        </div>
+      {% if user.role == 'academic_admin' %}
+        {# Academic Admin Dashboard #}
+        <div class="grid-2">
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-200/30 flex items-center justify-center text-2xl">⏳</div>
+              <div>
+                <div class="text-2xl font-bold text-amber-600">{{ pending_students }}</div>
+                <div class="text-sm text-slate-500">Alumnos pendientes</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">🎓</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ pending_renewals }}</div>
+                <div class="text-sm text-slate-500">Renovaciones pendientes</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5 col-span-2">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">👨‍🎓</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ total_students }}</div>
+                <div class="text-sm text-slate-500">Total estudiantes aprobados</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2 mt-6">
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2z"/></svg>
+              Aprobar Registros
+            </div>
+            <a href="{{ url_for('admin_approvals') }}" class="btn-primary btn-sm">
+              Revisar {{ pending_students }} pendientes
+            </a>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Renovaciones de Grado
+            </div>
+            <a href="{{ url_for('admin_grade_renewals') }}" class="btn-primary btn-sm">
+              Revisar {{ pending_renewals }} solicitudes
+            </a>
+          </div>
+          <div class="form-section col-span-2">
+            <div class="form-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              Sistema Global de Calificaciones
+            </div>
+            <div class="text-sm text-slate-500 mb-3">
+              Ver todas las calificaciones del estudiantado en tiempo real.
+            </div>
+            <a href="{{ url_for('academic_grades_overview') }}" class="btn-secondary btn-sm">
+              Ver Analíticos
+            </a>
+          </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        {% endif %}
+
+        {% if user.role == 'activity_admin' %}
+        {# Activity Admin Dashboard #}
+        <div class="grid-2">
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">📰</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ activities_count }}</div>
+                <div class="text-sm text-slate-500">Actividades publicadas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+              Publicar Actividad
+            </div>
+            <div class="flex gap-3">
+              <a href="{{ url_for('activity_new') }}" class="btn-primary btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                Nueva Noticia / Circular / Evento
+              </a>
+              <a href="{{ url_for('activity_admin') }}" class="btn-secondary btn-sm">Ver publicaciones</a>
+            </div>
+          </div>
+        </div>
+
+        {% if recent_activities %}
+          <div class="mt-6">
+            <div class="form-section">
+              <div class="form-section-title">Actividades Recientes</div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Título</th>
+                      <th>Categoría</th>
+                      <th>Fecha</th>
+                      <th>Autor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for act in recent_activities %}
+                    <tr class="rank-animate">
+                      <td><span class="font-medium text-slate-800">{{ act.title }}</span></td>
+                      <td><span class="badge badge-info">{{ act.category }}</span></td>
+                      <td class="text-slate-500">{{ act.published_at[:10] if act.published_at else '—' }}</td>
+                      <td class="text-slate-500">{{ act.author.full_name if act.author else '—' }}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        {% endif %}
+
+        {% if user.role == 'teacher' %}
+        {# Teacher Dashboard #}
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-full bg-blue-200/30 flex items-center justify-center text-xl text-slate-800">👨‍🏫</div>
+          <div>
+            <h2 class="text-lg font-semibold text-slate-800">{{ user.full_name }}</h2>
+            <p class="text-sm text-slate-500">Docente de {{ teacher_sections[0].name if teacher_sections else '—' }} · {{ grade.name if grade else '—' }}</p>
+          </div>
+        </div>
+
+        <div class="grid-2 mt-6">
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">📝</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ teacher_ras|length }}</div>
+                <div class="text-sm text-slate-500">RAs activos</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-200/30 flex items-center justify-center text-2xl">⏳</div>
+              <div>
+                <div class="text-2xl font-bold text-amber-600">{{ pending_submissions }}</div>
+                <div class="text-sm text-slate-500">Entregas pendientes de calificar</div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-5 col-span-2">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">📑</div>
+              <div>
+                <div class="text-2xl font-bold text-slate-800">{{ tasks|length }}</div>
+                <div class="text-sm text-slate-500">Tareas publicadas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if teacher_ras %}
+          <div class="mt-6">
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Resultados de Aprendizaje (RAs) Activos
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>RA</th>
+                      <th>Materia</th>
+                      <th>Periodo</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for ra in teacher_ras %}
+                    <tr>
+                      <td><span class="font-medium text-slate-800">{{ ra.title[:60] }}{% if ra.title|length > 60 %}...{% endif %}</span></td>
+                      <td><span class="badge badge-info">{{ ra.subject.name }}</span></td>
+                      <td class="text-slate-500">{{ ra.start_date }} → {{ ra.end_date }}</td>
+                      <td>
+                        {% if ra.is_closed %}
+                          <span class="badge badge-success">Cerrado</span>
+                        {% else %}
+                          <span class="badge badge-warning">Activo</span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        <a href="{{ url_for('teacher_ra_detail', ra_id=ra.id) }}" class="btn-primary btn-sm">
+                          Ver
+                        </a>
+                        {% if not ra.is_closed %}
+                          <a href="{{ url_for('teacher_task_new') }}?ra_id={{ ra.id }}" class="btn-secondary btn-sm">
+                            Nueva Tarea
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if tasks %}
+          <div class="mt-6">
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Tareas Publicadas
+              </div>
+              <div class="flex flex-wrap gap-3">
+              {% for task in tasks %}
+                <div class="card p-4 flex-1 min-w-[200px]">
+                  <div class="text-sm font-semibold text-slate-800">{{ task.title[:60] }}</div>
+                  <div class="text-xs text-slate-500 mt-1">RA: {{ task.learning_outcome.title[:40] }}</div>
+                  <div class="text-xs text-slate-400 mt-1">
+                    Fecha limite: {{ task.due_date_str if task.due_date_str else '—' }}
+                  </div>
+                  <a href="{{ url_for('teacher_ra_detail', ra_id=task.ra_id) }}" class="mt-2 text-xs text-brand-600 font-medium hover:text-brand-700 inline-block">
+                    Ver entregas →
+                  </a>
+                </div>
+              {% endfor %}
+              </div>
+              </div>
+              </div>
+              </div>
+              {% endif %}
+
+              {% if user.role == 'student' %}
+    {# Student Dashboard #}
+      <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-full bg-blue-200/30 flex items-center justify-center text-xl text-slate-800">👤</div>
+          <div>
+            <h2 class="text-lg font-semibold text-slate-800">{{ user.full_name }}</h2>
+            <p class="text-sm text-slate-500">{{ my_section_name }} · {{ my_grade_name }}</p>
+          </div>
+        </div>
+
+        {% if mode == 'vacations' %}
+          {# Vacations mode dashboard #}
+          {% if prep_resources %}
+            <div class="mt-6">
+              <div class="form-section">
+                <div class="form-section-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                  Preparación de Vacaciones — {{ my_grade_name }}
+                </div>
+                <div class="text-sm text-slate-500 mb-4">
+                  Recursos para preparar el próximo año escolar. Revisa los libros y cursos disponibles.
+                </div>
+                <div class="grid-2">
+                  <div>
+                    <h3 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">📚 Libros MINERD</h3>
+                    <div class="space-y-2">
+                    {% for book in prep_resources.books %}
+                      <div class="flex items-center gap-3 p-2 bg-brand-50 rounded-lg border border-brand-200">
+                        <div class="w-8 h-8 rounded bg-brand-500 flex items-center justify-center text-white text-xs">📖</div>
+                        <div class="flex-1 min-w-0">
+                          <div class="text-sm font-medium text-slate-800 truncate">{{ book.title }}</div>
+                          <div class="text-xs text-slate-500">{{ book.subject }}</div>
+                        </div>
+                        <span class="badge badge-success text-xs">Disponible</span>
+                      </div>
+                    {% endfor %}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">🎓 Cursos Prácticos</h3>
+                    <div class="space-y-2">
+                    {% for course in prep_resources.courses %}
+                      <div class="flex items-center gap-3 p-2 bg-brand-50 rounded-lg border border-brand-200">
+                        <div class="w-8 h-8 rounded bg-brand-500 flex items-center justify-center text-white text-xs">🎓</div>
+                        <div class="flex-1 min-w-0">
+                          <div class="text-sm font-medium text-slate-800 truncate">{{ course.title }}</div>
+                          <div class="text-xs text-slate-500">{{ course.type }}</div>
+                        </div>
+                        <span class="badge badge-success text-xs">Iniciar</span>
+                      </div>
+                    {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% else %}
+          {# Student dashboard: mis tareas, notas, portafolio, ranking #}
+          <div class="grid-3 mt-6">
+            <div class="card p-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">📝</div>
+                <div>
+                  <div class="text-2xl font-bold text-slate-800">{{ my_tasks|selectattr('completed')|list|length }}</div>
+                  <div class="text-sm text-slate-500">Tareas entregadas</div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-200/30 flex items-center justify-center text-2xl">⏳</div>
+                <div>
+                  <div class="text-2xl font-bold text-amber-600">{{ my_tasks|rejectattr('completed')|list|length }}</div>
+                  <div class="text-sm text-slate-500">Tareas pendientes</div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-200/30 flex items-center justify-center text-2xl">🎒</div>
+                <div>
+                  <div class="text-2xl font-bold text-slate-800">{{ my_portfolio_stats.evidences if my_portfolio_stats else 0 }}</div>
+                  <div class="text-sm text-slate-500">Evidencias en portafolio</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {# Mis Tareas #}
+          {% if my_tasks %}
+            <div class="mt-6">
+              <div class="form-section">
+                <div class="form-section-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                  Mis Tareas
+                </div>
+                <div class="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tarea</th>
+                        <th>RA</th>
+                        <th>Fecha Limite</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in my_tasks %}
+                      <td>
+                        <span class="font-medium text-slate-800">{{ item.task.title }}</span>
+                            {% if item.completed %}
+                              <div class="mt-1 flex items-center gap-1">
+                                <span class="badge badge-success">Calificada</span>
+                                <span class="text-xs text-green-600 font-semibold">{{ item.score }}/100</span>
+                              </div>
+                            {% elif item.submission and not item.completed %}
+                              <div class="mt-1">
+                                <span class="badge badge-warning">Enviada — en revision</span>
+                              </div>
+                            {% endif %}
+                          </td>
+                          <td><span class="badge badge-info">{{ item.task.learning_outcome.title[:35] }}</span></td>
+                          <td class="text-slate-500">{{ item.task.due_date_str if item.task.due_date_str else '—' }}</td>
+                          <td>
+                            {% if item.completed %}
+                              <span class="badge badge-success">Entregada</span>
+                            {% elif item.submission and not item.completed %}
+                              <span class="badge badge-warning">Pendiente calificacion</span>
+                            {% else %}
+                              <span class="badge badge-danger">Pendiente</span>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {% if item.completed %}
+                              <a href="{{ url_for('student_portfolio') }}" class="btn-secondary btn-sm">Ver en portafolio</a>
+                            {% elif item.submission and not item.completed %}
+                              <span class="text-slate-400 text-xs">Esperando calificacion</span>
+                            {% else %}
+                              <a href="{{ url_for('student_submit_task', task_id=item.task.id) }}" class="btn-primary btn-sm">Entregar</a>
+                            {% endif %}
+                          </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="mt-6 card p-6 text-center text-slate-400">
+              <p>No tienes tareas pendientes en este momento.</p>
+              <p class="text-xs mt-1">Las tareas apareceran aqui cuando tu profesor las publique.</p>
+            </div>
+          {% endif %}
+
+          <!-- Mis Notas preview -->
+          {% if my_grades_preview %}
+            <div class="mt-6">
+              <div class="form-section">
+                <div class="form-section-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                  Mis Notas en Tiempo Real
+                </div>
+                <div class="grid-2">
+                  <div class="space-y-2">
+                    {% for g in my_grades_preview %}
+                      <div class="flex items-center justify-between p-3 bg-brand-50 rounded-lg border border-brand-200">
+                        <div>
+                          <div class="text-sm font-medium text-slate-800">{{ g.subject_name }}</div>
+                          <div class="text-xs text-slate-400">{{ g.count }} entregas calificadas</div>
+                        </div>
+                        <div class="text-lg font-bold {% if g.average >= 80 %}text-green-600{% elif g.average >= 60 %}text-amber-600{% else %}text-red-500{% endif %}">
+                          {{ g.average }}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="card p-5 flex flex-col items-center justify-center mt-4">
+                    <div class="text-3xl font-bold text-slate-800">
+                      {% set avg = (my_grades_preview|map(attribute='average')|sum / my_grades_preview|length) if my_grades_preview else 0 %}
+                      {{ "%.1f"|format(avg) }}
+                    </div>
+                    <div class="text-sm text-slate-500">Promedio general</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+      {% endif %}
+
+    </div>
+  </main>
+</div>
+
+<script>
+  function toggleSystemMode() {
+    if ('{{ user.role }}' !== 'super_admin') return;
+    fetch('{{ url_for("system_mode") }}', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'system_mode={{ "vacations" if mode == "normal" else "normal" }}'
+    }).then(r => r.json()).then(data => {
+      location.reload();
+    });
+  }
+</script>
+{% endblock %}

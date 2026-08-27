@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Aprobacion de Registros — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen relative overflow-hidden">
+  <div class="fixed inset-0 bg-gradient-to-br from-[#080f1e] via-[#0d2847] to-[#1a4a8a]"></div>
+  <div class="fixed inset-0 opacity-30 pointer-events-none">
+    <div class="particle-field"></div>
+  </div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-6 py-8">
+
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-white flash-animation">Aprobacion de Registros</h1>
+        <p class="text-sm text-[#9bb0cc] mt-1">Revisa y aprueba las solicitudes de nuevos estudiantes.</p>
+      </div>
+      <span class="badge badge-academic_admin">Academic Admin</span>
+    </div>
+
+    {% if pending %}
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-semibold text-white">Solicitudes Pendientes ({{ pending|length }})</h2>
+          <span class="badge badge-warning">Requiere accion</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Grado Solicitado</th>
+                <th>Fecha Solicitud</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for user in pending %}
+              <tr>
+                <td class="font-medium text-white">{{ user.full_name }}</td>
+                <td class="text-[#9bb0cc]">{{ user.email }}</td>
+                <td class="text-[#9bb0cc]">{{ user.grade.name if user.grade else '—' }}</td>
+                <td class="text-[#6b8499]">{{ user.created_at[:10] if user.created_at else '—' }}</td>
+                <td>
+                  <button onclick="approveStudent({{ user.id }}, '{{ user.full_name }}')"
+                          class="btn-primary btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    Aprobar
+                  </button>
+                  <button onclick="rejectStudent({{ user.id }}, '{{ user.full_name }}')"
+                          class="btn-danger btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Rechazar
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <div class="card p-8 text-center">
+        <div class="text-4xl mb-3">✅</div>
+        <h2 class="text-lg font-semibold text-white">No hay solicitudes pendientes</h2>
+        <p class="text-sm text-[#9bb0cc] mt-1">Todas las cuentas estudiantiles han sido aprobadas.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  function approveStudent(id, name) {
+    if (!confirm(`Aprobar cuenta de ${name}?`)) return;
+    fetch('/admin/approve/' + id, { method: 'POST' })
+      .then(() => location.reload());
+  }
+  function rejectStudent(id, name) {
+    if (!confirm(`Rechazar cuenta de ${name}? Esta accion no se puede deshacer.`)) return;
+    fetch('/admin/reject/' + id, { method: 'POST' })
+      .then(() => location.reload());
+  }
+</script>
+{% endblock %}

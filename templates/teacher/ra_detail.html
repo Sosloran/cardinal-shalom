@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}Detalle de RA — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen relative overflow-hidden">
+  <div class="fixed inset-0 bg-gradient-to-br from-[#080f1e] via-[#0d2847] to-[#1a4a8a]"></div>
+  <div class="fixed inset-0 opacity-30 pointer-events-none">
+    <div class="particle-field"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+
+    <div class="flex items-center gap-3 mb-8">
+      <div class="logo-svg-inline">
+        <img src="/static/img/logo.svg" alt="Cardinal Shalom" width="40" height="40">
+      </div>
+      <div class="flex-1">
+        <a href="{{ url_for('teacher_my_classes') }}" class="text-[#9bb0cc] hover:text-white text-sm transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Mis Clases
+        </a>
+        <h1 class="text-2xl font-bold text-white flash-animation">{{ ra.title }}</h1>
+        <p class="text-sm text-[#9bb0cc] mt-1">{{ ra.subject.name }} · {{ ra.start_date }} → {{ ra.end_date }}</p>
+      </div>
+      <span class="badge {% if ra.is_closed %}badge-success{% else %}badge-warning{% endif %}">
+        {% if ra.is_closed %}Cerrado{% else %}Activo{% endif %}
+      </span>
+    </div>
+
+    {% if task_data %}
+      {% for td in task_data %}
+        <div class="card p-6 mb-4">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-lg font-semibold text-white">{{ td.task.title }}</h2>
+              <p class="text-sm text-[#9bb0cc] mt-1">
+                Fecha limite: {{ td.task.due_date_str if td.task.due_date_str else '—' }}
+              </p>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="badge badge-warning">{{ td.pending_count }} pendientes</span>
+              <a href="{{ url_for('teacher_task_new') }}?ra_id={{ ra.id }}" class="btn-primary btn-sm">
+                Nueva tarea
+              </a>
+            </div>
+          </div>
+
+          {% if td.submissions %}
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Estudiante</th>
+                    <th>Entrega</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Calificacion</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for sub in td.submissions %}
+                  <tr>
+                    <td class="font-medium text-white">{{ sub.student.full_name }}</td>
+                    <td>
+                      {% if sub.content_type == 'image' %}
+                        <div class="submission-preview flex items-center gap-2">
+                          <img src="{{ sub.content }}" class="h-10 w-10 rounded object-cover" onerror="this.style.display='none'">
+                          <span class="text-xs text-[#9bb0cc] truncate">Imagen entregada</span>
+                        </div>
+                      {% elif sub.content_type == 'file' %}
+                        <div class="submission-preview flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#9bb0cc]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                          <span class="text-xs text-[#9bb0cc]">Archivo adjunto</span>
+                        </div>
+                      {% elif sub.content_type == 'link' %}
+                        <div class="submission-preview text-xs text-[#3394ff]">🔗 {{ sub.content[:60] }}</div>
+                      {% else %}
+                        <div class="submission-preview">{{ sub.content|striptags|truncate(80) }}</div>
+                      {% endif %}
+                    </td>
+                    <td class="text-[#9bb0cc]">{{ sub.submitted_at.strftime('%Y-%m-%d %H:%M') if sub.submitted_at else '—' }}</td>
+                    <td>
+                      {% if sub.score is not none %}
+                        <span class="badge badge-success">Calificada</span>
+                      {% else %}
+                        <span class="badge badge-danger">Pendiente</span>
+                      {% endif %}
+                      {% if sub.is_late %}
+                        <span class="badge badge-warning ml-1">Retrasada</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if sub.score is not none %}
+                        <span class="font-semibold text-[#16a34a]">{{ sub.score }}/{{ td.task.max_score }}</span>
+                        {% if sub.score_comment %}
+                          <div class="text-xs text-[#9bb0cc] mt-1">{{ sub.score_comment }}</div>
+                        {% endif %}
+                      {% else %}
+                        <span class="text-[#6b8499]">—</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if sub.score is none %}
+                        <button onclick="openGradeModal({{ sub.id }})" class="btn-primary btn-sm">
+                          Calificar
+                        </button>
+                      {% else %}
+                        <button onclick="reopenGrade({{ sub.id }})" class="btn-secondary btn-sm">
+                          Reabrir
+                        </button>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="p-4 text-center text-[#9bb0cc] text-sm bg-[#0d2847]/60 rounded-lg border border-[#2d6da8]/20">
+              Aún no hay entregas para esta tarea.
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="card p-8 text-center">
+        <div class="text-4xl mb-3">📝</div>
+        <h2 class="text-lg font-semibold text-white">Este RA no tiene tareas publicadas</h2>
+        <p class="text-sm text-[#9bb0cc] mt-1">Crea tu primera tarea para comenzar a recibir entregas.</p>
+        <a href="{{ url_for('teacher_task_new') }}?ra_id={{ ra.id }}" class="btn-primary mt-4">Crear Tarea</a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- Grade Modal -->
+<div id="gradeModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+  <div class="bg-[#0d2847] rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4 border border-[#3394ff]/30">
+    <h3 class="text-lg font-semibold text-white mb-4">Calificar Entrega</h3>
+    <form id="gradeForm" onsubmit="submitGrade(event)">
+      <input type="hidden" id="gradeSubmissionId">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-[#9bb0cc] mb-1">Puntuacion (0-100)</label>
+          <input id="gradeScore" type="number" min="0" max="100" required class="input" placeholder="100">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#9bb0cc] mb-1">Comentario (opcional)</label>
+          <textarea id="gradeComment" class="input" placeholder="Retroalimentacion para el estudiante..." rows="3"></textarea>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="submit" class="btn-primary flex-1">Guardar Calificacion</button>
+        <button type="button" onclick="closeGradeModal()" class="btn-secondary flex-1">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openGradeModal(subId) {
+    document.getElementById('gradeSubmissionId').value = subId;
+    document.getElementById('gradeModal').classList.remove('hidden');
+  }
+  function closeGradeModal() {
+    document.getElementById('gradeModal').classList.add('hidden');
+  }
+  function submitGrade(e) {
+    e.preventDefault();
+    const subId = document.getElementById('gradeSubmissionId').value;
+    const data = new FormData();
+    data.append('score', document.getElementById('gradeScore').value);
+    data.append('score_comment', document.getElementById('gradeComment').value);
+    fetch('/teacher/grade/' + subId, { method: 'POST', body: data })
+      .then(() => { closeGradeModal(); location.reload(); })
+      .catch(err => alert('Error: ' + err.message));
+  }
+  function reopenGrade(subId) {
+    if (!confirm('Reabrir esta calificacion para editable?')) return;
+    location.reload();
+  }
+</script>
+{% endblock %}

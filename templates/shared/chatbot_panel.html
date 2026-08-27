@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Chatbot Asistente — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-[#f8fafc]">
+  <div class="max-w-5xl mx-auto px-6 py-8">
+
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-full bg-[#2d6da8] flex items-center justify-center text-xl">💬</div>
+      <div>
+        <h1 class="text-2xl font-bold text-[#1e3a5f]">Chatbot Asistente</h1>
+        <p class="text-slate-500 mt-1">Asistente virtual integrado para navegar por la plataforma.</p>
+      </div>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-full bg-[#1e3a5f] flex items-center justify-center text-white font-bold text-lg">CS</div>
+        <div>
+          <div class="font-semibold text-[#1e3a5f]">Cardinal Shalom Asistente</div>
+          <div class="text-sm text-slate-400">Chatea conmigo para navegar por secciones y buscar en la biblioteca.</div>
+        </div>
+      </div>
+
+      <div class="chatbot-panel" style="width: 100%; height: 400px; position: relative; margin-top: 16px; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 24px rgba(30,58,95,0.06); overflow: hidden;">
+        <div style="background: #1e3a5f; color: white; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: #f5b342; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #1e3a5f;">CS</div>
+            <div>
+              <div style="font-size: 14px; font-weight: 600;">Cardinal Shalom Asistente</div>
+              <div style="font-size: 11px; color: #94a3b8;">En linea · disponible 24/7</div>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: #94a3b8;">v1.0 Beta</div>
+        </div>
+        <div style="background: white; padding: 16px; height: calc(100% - 60px); overflow-y: auto; display: flex; flex-direction: column;">
+          <div style="background: #f1f5f9; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #334155; margin-bottom: 12px; max-width: 92%;">
+            Hola! Soy el asistente de Cardinal Shalom. Pregúntame sobre la plataforma o usa los botones rapidos abajo.
+          </div>
+
+          {% if messages %}
+            {% for msg in messages %}
+              {% if msg.role == 'bot' %}
+                <div style="background: #f1f5f9; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #334155; margin-bottom: 8px; max-width: 92%;">
+                  {{ msg.content }}
+                </div>
+              {% else %}
+                <div style="background: #e8f0f8; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #1e3a5f; margin-bottom: 8px; max-width: 92%; margin-left: auto;">
+                  {{ msg.content }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <div id="chatbot-messages-extra" style="flex: 1;"></div>
+        </div>
+        <div style="background: #f8fafc; padding: 12px 16px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; align-items: center;">
+          <input id="chatbot-input-extra" type="text" placeholder="Escribe tu pregunta..."
+                 onkeydown="if(event.key==='Enter'){sendChatbotExtra();}"
+                 style="flex: 1; border: 1px solid #e2e8f0; border-radius: 20px; padding: 8px 14px; font-size: 14px; outline: none; background: white;">
+          <button onclick="sendChatbotExtra()"
+                  style="width: 36px; height: 36px; background: #2d6da8; color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.78 4.22a1 1 0 11-1.41-1.41L9 12.41 7.72 11.13a1 1 0 011.41-1.41L10 11.09l1.28-1.29a1 1 0 111.41 1.41L11.41 12.41l1.29 1.28a1 1 0 01-1.41 1.41L10 13.59l-1.28 1.29a1 1 0 01-1.41-1.41L8.72 11.13 10 12.41z" clip-rule="evenodd"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2 mt-4">
+        <p class="text-sm text-slate-400 w-full mb-1">Prueba estas preguntas:</p>
+        <button onclick="sendQuickMessage('libros')" class="btn-secondary btn-sm">📚 ¿Donde estan los libros?</button>
+        <button onclick="sendQuickMessage('tarea')" class="btn-secondary btn-sm">📝 ¿Como entrego una tarea?</button>
+        <button onclick="sendQuickMessage('ranking')" class="btn-secondary btn-sm">🏆 ¿Como veo el ranking?</button>
+        <button onclick="sendQuickMessage('notas')" class="btn-secondary btn-sm">📊 ¿Como veo mis notas?</button>
+        <button onclick="sendQuickMessage('portafolio')" class="btn-secondary btn-sm">🎒 ¿Que es el portafolio?</button>
+      </div>
+    </div>
+
+    <div class="mt-6 card p-5">
+      <div class="form-section-title mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Funciones del Asistente
+      </div>
+      <div class="grid-2 text-sm">
+        <div class="space-y-2">
+          <p>✅ Navegacion por secciones de la plataforma</p>
+          <p>✅ Busqueda en la biblioteca de libros</p>
+          <p>✅ Informacion sobre tareas y entregas</p>
+          <p>✅ Explicacion de RAs y portafolio</p>
+        </div>
+        <div class="space-y-2">
+          <p>✅ Informacion sobre ranking y notas</p>
+          <p>✅ Renovacion de grado</p>
+          <p>✅ Modo completivo y vacaciones</p>
+          <p>✅ Respuestas instantaneas sin recargar</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function sendQuickMessage(keyword) {
+    document.getElementById('chatbot-input-extra').value = keyword;
+    sendChatbotExtra();
+  }
+  function sendChatbotExtra() {
+    const input = document.getElementById('chatbot-input-extra');
+    const query = input.value.trim();
+    if (!query) return;
+    const container = document.getElementById('chatbot-messages-extra');
+    container.innerHTML += '<div style="background: #e8f0f8; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #1e3a5f; margin-bottom: 8px; max-width: 92%; margin-left: auto;">' + query + '</div>';
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    fetch('{{ url_for("chatbot_query", _external=False) }}', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'query=' + encodeURIComponent(query)
+    })
+    .then(r => r.json())
+    .then(data => {
+      container.innerHTML += '<div style="background: #f1f5f9; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #334155; margin-bottom: 8px; max-width: 92%;">' + data.response + '</div>';
+      container.scrollTop = container.scrollHeight;
+    })
+    .catch(err => {
+      container.innerHTML += '<div style="background: #fee2e2; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #991b1b; margin-bottom: 8px; max-width: 92%;">Error al enviar la pregunta.</div>';
+    });
+  }
+</script>
+{% endblock %}

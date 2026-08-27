@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Renovaciones de Grado — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen relative overflow-hidden">
+  <div class="fixed inset-0 bg-gradient-to-br from-[#080f1e] via-[#0d2847] to-[#1a4a8a]"></div>
+  <div class="fixed inset-0 opacity-30 pointer-events-none">
+    <div class="particle-field"></div>
+  </div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-6 py-8">
+
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-white flash-animation">Renovaciones de Grado</h1>
+        <p class="text-sm text-[#9bb0cc] mt-1">Revisa y aprueba las solicitudes de paso de ano escolar.</p>
+      </div>
+      <span class="badge badge-academic_admin">Academic Admin</span>
+    </div>
+
+    {% if renewals %}
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-semibold text-white">Solicitudes Pendientes ({{ renewals|length }})</h2>
+          <span class="badge badge-warning">Esperando revision</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Estudiante</th>
+                <th>Grado Actual</th>
+                <th>Grado Solicitado</th>
+                <th>Fecha Solicitud</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for r in renewals %}
+              <tr>
+                <td class="font-medium text-white">{{ r.student_name }}</td>
+                <td class="text-[#9bb0cc]">{{ r.current_grade }}</td>
+                <td class="text-white font-medium">{{ r.requested_grade }}</td>
+                <td class="text-[#6b8499]">{{ r.requested_at[:10] if r.requested_at else '—' }}</td>
+                <td>
+                  <button onclick="approveRenewal({{ r.id }})"
+                          class="btn-primary btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    Aprobar
+                  </button>
+                  <button onclick="rejectRenewal({{ r.id }})"
+                          class="btn-danger btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Rechazar
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <div class="card p-8 text-center">
+        <div class="text-4xl mb-3">✅</div>
+        <h2 class="text-lg font-semibold text-white">No hay renovaciones pendientes</h2>
+        <p class="text-sm text-[#9bb0cc] mt-1">Todos los estudiantes han renovado o no hay solicitudes nuevas.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  function approveRenewal(id) {
+    if (!confirm('Aprobar esta renovacion de grado?')) return;
+    fetch('/admin/renew/' + id + '/approve', { method: 'POST' })
+      .then(() => location.reload());
+  }
+  function rejectRenewal(id) {
+    if (!confirm('Rechazar esta renovacion?')) return;
+    fetch('/admin/renew/' + id + '/reject', { method: 'POST' })
+      .then(() => location.reload());
+  }
+</script>
+{% endblock %}

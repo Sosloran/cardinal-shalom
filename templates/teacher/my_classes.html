@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Mis Clases — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen relative overflow-hidden">
+  <div class="fixed inset-0 bg-gradient-to-br from-[#080f1e] via-[#0d2847] to-[#1a4a8a]"></div>
+  <div class="fixed inset-0 opacity-30 pointer-events-none">
+    <div class="particle-field"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+
+    <div class="flex items-center gap-3 mb-8">
+      <div class="logo-svg-inline">
+        <img src="/static/img/logo.svg" alt="Cardinal Shalom" width="44" height="44">
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-white flash-animation">Mis Clases</h1>
+        <p class="text-sm text-[#9bb0cc] mt-1">{{ user.full_name }} · Seccion {{ section.name if section else '—' }} · {{ grade.name if grade else '—' }}</p>
+      </div>
+      <span class="ml-auto badge badge-gold">👨‍🏫 Docente</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card p-5">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-[#3394ff]/20 flex items-center justify-center text-2xl">📝</div>
+          <div>
+            <div class="text-2xl font-bold text-white">{{ ras|length }}</div>
+            <div class="text-sm text-[#9bb0cc]">RAs activos</div>
+          </div>
+        </div>
+      </div>
+      <div class="card p-5">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-[#f5b342]/20 flex items-center justify-center text-2xl">⏳</div>
+          <div>
+            <div class="text-2xl font-bold text-[#f5b342]">{{ tasks|length }}</div>
+            <div class="text-sm text-[#9bb0cc]">Tareas publicadas</div>
+          </div>
+        </div>
+      </div>
+      <div class="card p-5 col-span-2">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-[#3394ff]/20 flex items-center justify-center text-2xl">👨‍🎓</div>
+          <div>
+            <div class="text-2xl font-bold text-white">{{ students|length if students else 0 }}</div>
+            <div class="text-sm text-[#9bb0cc]">Estudiantes en tu seccion</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex gap-3">
+      <a href="{{ url_for('teacher_task_new') }}" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        Nueva Tarea
+      </a>
+      <a href="{{ url_for('teacher_library_manager') }}" class="btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        Gestionar Biblioteca
+      </a>
+    </div>
+
+    {% if ras %}
+      <div class="mt-6">
+        <div class="form-section">
+          <div class="form-section-title text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#3394ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            Resultados de Aprendizaje (RAs)
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>RA</th>
+                  <th>Materia</th>
+                  <th>Periodo</th>
+                  <th>Estado</th>
+                  <th>Tareas</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for ra in ras %}
+                <!-- Nivel 1: fila del RA padre -->
+                <tr class="hover:bg-brand-100/50 transition-colors">
+                  <td>
+                    <span class="font-medium text-white truncate">{{ ra.title[:70] }}{% if ra.title|length > 70 %}...{% endif %}</span>
+                  </td>
+                  <td>
+                    <span class="badge {{ 'badge-info' if ra.subject_type == 'technical' else 'badge-neutral' }}">{{ ra.subject_name }}</span>
+                  </td>
+                  <td class="text-slate-500 text-sm">{{ ra.start_date.strftime('%d/%m/%Y') }} → {{ ra.end_date.strftime('%d/%m/%Y') }}</td>
+                  <td>
+                    <span class="badge {{ 'badge-success' if ra.is_closed else 'badge-warning' }}">{{ ra.status_label }}</span>
+                  </td>
+                  <td class="text-slate-500 text-sm">{{ ra.task_count }} tareas</td>
+                  <td>
+                    <a href="{{ url_for('teacher_ra_detail', ra_id=ra.id) }}" class="btn-primary btn-sm">Ver entregas</a>
+                    {% if not ra.is_closed %}
+                      <a href="{{ url_for('teacher_task_new') }}?ra_id={{ ra.id }}" class="btn-secondary btn-sm">Nueva tarea</a>
+                    {% endif %}
+                  </td>
+                </tr>
+                <!-- Nivel 2: subtareas publicadas de este RA -->
+                {% for task in ra.tasks %}
+                  {% if task.is_published %}
+                <tr class="hover:bg-brand-50 transition-colors">
+                  <td></td>
+                  <td>
+                    <span class="badge badge-info font-normal">{{ task.learning_outcome_title[:35] }}</span>
+                  </td>
+                  <td colspan="2" class="text-slate-500 text-sm">
+                    <span class="font-medium text-[#1e3a5f] text-sm">{{ task.title[:60] }}</span>
+                    <br><span class="text-xs">Limite: {{ task.due_date_str }}</span>
+                  </td>
+                  <td></td>
+                  <td>
+                    <a href="{{ url_for('teacher_ra_detail', ra_id=task.ra_id) }}" class="text-xs text-[#2d6da8] font-medium hover:underline">Ver entregas →</a>
+                  </td>
+                </tr>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if tasks %}
+      <div class="mt-6">
+        <div class="form-section">
+          <div class="form-section-title">Tareas Publicadas</div>
+          <div class="flex flex-wrap gap-3">
+          {% for task in tasks %}
+            <div class="card p-4 flex-1 min-w-[220px]">
+              <div class="text-sm font-semibold text-[#1e3a5f]">{{ task.title[:60] }}</div>
+              <div class="text-xs text-slate-500 mt-1">RA: {{ task.learning_outcome_title[:40] }}</div>
+              <div class="text-xs text-slate-400 mt-1">
+                Limite: {{ task.due_date.strftime('%Y-%m-%d %H:%M') if task.due_date else '—' }}
+              </div>
+              <div class="mt-2 flex gap-2">
+                <a href="{{ url_for('teacher_ra_detail', ra_id=task.ra_id) }}" class="text-xs text-[#2d6da8] font-medium hover:underline">Ver entregas →</a>
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

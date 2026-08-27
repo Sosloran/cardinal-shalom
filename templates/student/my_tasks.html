@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Tareas — Cardinal Shalom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#1e3a5f;--brand:#0055d4;--brand-light:#e8f4fd;--brand-50:#f0f7ff;--brand-100:#dbeafe;--brand-200:#bfdbfe;--brand-500:#3b82f6;--brand-600:#2563eb;--brand-700:#1d4ed8;--slate:#475569;--slate-light:#94a3b8}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#fff;min-height:100vh}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .page-header{padding:16px 0 8px;border-bottom:1px solid #e2e8f0;margin-bottom:24px}
+    .page-header h1{font-size:1.75rem;font-weight:700;color:#1e293b}
+    .page-header p{color:var(--slate);margin-top:4px;font-size:0.95rem}
+    .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:9999px;font-size:0.75rem;font-weight:600}
+    .badge-info{background:var(--brand-100);color:var(--brand-700)}
+    .badge-success{background:#dcfce7;color:#166534}
+    .badge-warning{background:#fef3c7;color:#92400e}
+    .badge-danger{background:#fef2f2;color:#dc2626}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;text-decoration:none;border:1px solid transparent;transition:all 0.15s}
+    .btn-primary{background:var(--brand);color:#fff}
+    .btn-primary:hover{background:var(--brand-600)}
+    .btn-secondary{background:#fff;color:var(--slate);border-color:#cbd5e1}
+    .btn-secondary:hover{background:#f8fafc;border-color:#94a3b8}
+    .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+    .gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.mt-2{margin-top:8px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}
+    .mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+    .text-sm{font-size:0.875rem}.text-xs{font-size:0.75rem}.text-slate-500{color:var(--slate)}.text-slate-400{color:var(--slate-light)}
+    .text-slate-700{color:#334155}.text-slate-800{color:#1e293b}.text-green-600{color:#16a34a}.text-red-500{color:#ef4444}
+    .font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}
+    .truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .rounded-lg{border-radius:8px}.p-4{padding:16px}.p-5{padding:20px}.w-full{width:100%}
+    .flex-wrap{flex-wrap:wrap}.flex-1{flex:1}.min-w-0{min-width:0}
+    .hover\:text-brand-700:hover{color:var(--brand-700)}.transition{transition:all 0.15s}
+    .inline-block{display:inline-block}.relative{position:relative}.z-10{z-index:10}
+    .shadow-lg{box-shadow:0 10px 15px -3px rgba(0,0,0,0.1)}
+    .text-center{text-align:center}
+    .text-amber-600{color:#d97706}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+  </style>
+</head>
+<body>
+  <nav class="navbar" style="background:#fff;border-bottom:1px solid #e2e8f0;">
+    <div class="container">
+      <div class="flex items-center justify-between" style="padding:12px 0;">
+        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#1e293b;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:0.85rem;">CS</div>
+          <div>
+            <div style="font-weight:600;font-size:0.95rem;">Cardinal Shalom</div>
+            <div style="font-size:0.7rem;color:var(--slate-light);">Plataforma Educativa</div>
+          </div>
+        </a>
+        <div class="flex items-center gap-3">
+          {% if session.get("user_id") %}
+          <span style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--brand-700);font-size:0.85rem;">{{ (user.full_name[0] if user else '?').upper() }}</div>
+            <span style="font-weight:600;font-size:0.85rem;color:#1e293b;">{{ user.full_name }}</span>
+          </span>
+          <a href="/logout" class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;">Cerrar sesión</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top:24px;">
+    <div class="page-header">
+      <h1>📝 Mis Tareas</h1>
+      <p>Tareas publicadas para {{ my_grade_name }} · {{ my_section_name }}</p>
+    </div>
+
+    {# Resumen rápido #}
+    <div class="grid-3 mb-4">
+      <div class="card">
+        <div style="font-size:2rem;font-weight:800;color:var(--brand-600);">{{ my_tasks|length if my_tasks else 0 }}</div>
+        <div style="font-size:0.85rem;color:var(--slate);margin-top:4px;">Total de tareas</div>
+      </div>
+      <div class="card">
+        <div style="font-size:2rem;font-weight:800;color:#16a34a;">{{ submitted_count }}</div>
+        <div style="font-size:0.85rem;color:var(--slate);margin-top:4px;">Entregadas</div>
+      </div>
+      <div class="card">
+        <div style="font-size:2rem;font-weight:800;color:#d97706;">{{ pending_count }}</div>
+        <div style="font-size:0.85rem;color:var(--slate);margin-top:4px;">Pendientes</div>
+      </div>
+    </div>
+
+    {# Lista de tareas #}
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div class="flex items-center gap-3">
+          <div style="width:40px;height:40px;border-radius:10px;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-size:1.25rem;">📋</div>
+          <div>
+            <h2 style="font-size:1.05rem;font-weight:700;color:#1e293b;">Tareas Publicadas</h2>
+            <p style="font-size:0.8rem;color:var(--slate);">Ordenadas por fecha límite</p>
+          </div>
+        </div>
+        {% if mode != 'vacations' %}
+          <a href="/student/renewal-request" class="btn btn-secondary" style="font-size:0.8rem;padding:6px 14px;">
+            🔄 Solicitar renovación
+          </a>
+        {% endif %}
+      </div>
+
+      {% if my_tasks %}
+        <div style="display:flex;flex-direction:column;gap:12px;">
+        {% for item in my_tasks %}
+          <div class="task-card" style="display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:12px;border:1px solid #e2e8f0;background:#fff;transition:all 0.15s;">
+            <div style="width:48px;height:48px;border-radius:12px;background:var(--brand-50);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📄</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span style="font-weight:700;font-size:0.95rem;color:#1e293b;truncate;max-width:300px;">{{ item.task.title }}</span>
+                {% if item.completed %}
+                  <span class="badge badge-success">✅ Entregada</span>
+                {% elif item.is_late %}
+                  <span class="badge badge-danger">⏰ Tarde</span>
+                {% else %}
+                  <span class="badge badge-info">Pendiente</span>
+                {% endif %}
+              </div>
+              <div style="font-size:0.78rem;color:var(--slate);margin-bottom:6px;">
+                RA: {{ item.task.learning_outcome.title[:60] }} · {{ item.task.learning_outcome.subject.name }}
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78rem;color:var(--slate);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Fecha límite: <strong style="color:#1e293b;">{{ item.due_date_str }}</strong>
+                </span>
+                {% if item.score is not none %}
+                  <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78rem;color:#16a34a;font-weight:700;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Calificación: <strong>{{ item.score }}%</strong>
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              {% if item.student_can_submit and not item.is_late %}
+                <a href="/student/submit/{{ item.task.id }}" class="btn btn-primary" style="font-size:0.8rem;padding:8px 16px;white-space:nowrap;">
+                  📤 Entregar
+                </a>
+              {% elif item.completed %}
+                <a href="/student/portfolio" class="btn btn-secondary" style="font-size:0.8rem;padding:8px 16px;white-space:nowrap;">
+                  Ver en portafolio
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center" style="padding:48px 16px;color:var(--slate);">
+          <div style="font-size:3rem;margin-bottom:12px;">📭</div>
+          <p style="font-size:0.9rem;font-weight:600;">No hay tareas publicadas para tu grado</p>
+          <p style="font-size:0.8rem;color:var(--slate-light);margin-top:4px;">Las tareas aparecerán cuando los docentes las publiquen.</p>
+          {% if mode == 'vacations' %}
+            <a href="/student/library" class="btn btn-primary mt-4" style="font-size:0.8rem;padding:8px 20px;">📚 Explorar biblioteca</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div style="text-align:center;padding:24px 0 48px;color:var(--slate-light);font-size:0.8rem;">
+      Cardinal Shalom — Plataforma Educativa Integral · Beta 2026
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.task-card').forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(8px)';
+      setTimeout(() => {
+        card.style.transition = 'all 0.25s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 80 * i);
+    });
+  </script>
+</body>
+</html>

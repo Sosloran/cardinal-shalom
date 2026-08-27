@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+{% block title %}Panel No-Code — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-[#f8fafc]">
+  <div class="max-w-7xl mx-auto px-6 py-8">
+
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-[#1e3a5f]">Panel No-Code</h1>
+        <p class="text-slate-500 mt-1">Agrega, edita y elimina grados, secciones y materias sin programar.</p>
+      </div>
+      <span class="badge badge-success">Super Admin</span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm border border-[#e2e8f0] w-fit">
+      <button onclick="switchTab('grades')" id="tab-grades"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ 'bg-[#1e3a5f] text-white' if active_tab == 'grades' else 'text-slate-600 hover:text-slate-800' }}">
+        🎓 Grados
+      </button>
+      <button onclick="switchTab('sections')" id="tab-sections"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ 'bg-[#1e3a5f] text-white' if active_tab == 'sections' else 'text-slate-600 hover:text-slate-800' }}">
+        📑 Secciones
+      </button>
+      <button onclick="switchTab('subjects')" id="tab-subjects"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ 'bg-[#1e3a5f] text-white' if active_tab == 'subjects' else 'text-slate-600 hover:text-slate-800' }}">
+        📚 Materias
+      </button>
+    </div>
+
+    <!-- Grados Tab -->
+    <div id="panel-grades" class="card p-6 {% if active_tab != 'grades' %}hidden{% endif %}">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-semibold text-[#1e3a5f]">Grados Escolares</h2>
+        <button onclick="openGradeModal()" class="btn-primary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Nuevo Grado
+        </button>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Codigo</th>
+              <th>Ano Escolar</th>
+              <th>Secuencia</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for grade in grades %}
+            <tr>
+              <td class="font-medium text-[#1e3a5f]">{{ grade.name }}</td>
+              <td class="font-mono text-sm text-slate-500">{{ grade.code }}</td>
+              <td class="text-slate-500">{{ grade.school_year }}</td>
+              <td>
+                <input type="number" value="{{ grade.seq }}"
+                       onchange="updateGradeSeq({{ grade.id }}, this.value)"
+                       class="input input-sm w-20">
+              </td>
+              <td>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" {% if grade.is_active %}checked{% endif %}
+                         onchange="toggleGradeActive({{ grade.id }}, this.checked)"
+                         class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2d6da8]/20 rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#e2e8f0] after:border after:rounded-full after:h-4 after:w-8 after:transition-all peer-checked:bg-[#2d6da8]"></div>
+                </label>
+              </td>
+              <td>
+                <button onclick="editGrade({{ grade.id }})" class="btn-secondary btn-sm">
+                  Editar
+                </button>
+                <button onclick="deleteGrade({{ grade.id }})" class="btn-danger btn-sm">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Grade Modal -->
+      <div id="gradeModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+          <h3 class="text-lg font-semibold text-[#1e3a5f] mb-4" id="gradeModalTitle">Nuevo Grado</h3>
+          <form id="gradeForm" onsubmit="saveGrade(event)">
+            <input type="hidden" id="gradeId">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nombre del grado</label>
+                <input id="gradeName" type="text" required class="input" placeholder="5to de Secundaria">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Codigo (ej. 5TO-SEC)</label>
+                <input id="gradeCode" type="text" required class="input font-mono" placeholder="5TO-SEC">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Ano Escolar</label>
+                <input id="gradeYear" type="text" required class="input" placeholder="2026-2027">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Secuencia (orden de visualizacion)</label>
+                <input id="gradeSeq" type="number" value="0" class="input w-24">
+              </div>
+              <div class="flex items-center gap-3 pt-2">
+                <input id="gradeActive" type="checkbox" checked class="rounded border-slate-300 text-[#2d6da8] focus:ring-[#2d6da8]">
+                <label for="gradeActive" class="text-sm text-slate-600">Grados activo</label>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+              <button type="submit" class="btn-primary flex-1">Guardar</button>
+              <button type="button" onclick="closeGradeModal()" class="btn-secondary flex-1">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secciones Tab -->
+    <div id="panel-sections" class="card p-6 {% if active_tab != 'sections' %}hidden{% endif %}">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-semibold text-[#1e3a5f]">Secciones</h2>
+        <button onclick="openSectionModal()" class="btn-primary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Nueva Seccion
+        </button>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Grado</th>
+              <th>Nombre</th>
+              <th>Capacidad</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for section in sections %}
+            <tr>
+              {# Pre-calcular nombre del grado para evitar DetachedInstanceError #}
+              {% set grade_name = '' %}
+              {% if section.grade_id and grades_by_id[section.grade_id] %}
+                {% set grade_name = grades_by_id[section.grade_id].name %}
+              {% endif %}
+              <td class="text-slate-500">{{ grade_name }}</td>
+              <td class="font-medium text-[#1e3a5f]">{{ section.name }}</td>
+              <td>
+                <input type="number" value="{{ section.capacity }}"
+                       onchange="updateSectionCapacity({{ section.id }}, this.value)"
+                       class="input input-sm w-20">
+              </td>
+              <td>
+                <button onclick="editSection({{ section.id }})" class="btn-secondary btn-sm">Editar</button>
+                <button onclick="deleteSection({{ section.id }})" class="btn-danger btn-sm">Eliminar</button>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section Modal -->
+      <div id="sectionModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+          <h3 class="text-lg font-semibold text-[#1e3a5f] mb-4" id="sectionModalTitle">Nueva Seccion</h3>
+          <form id="sectionForm" onsubmit="saveSection(event)">
+            <input type="hidden" id="sectionId">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Grado</label>
+                <select id="sectionGrade" required class="input">
+                  <option value="">— Selecciona —</option>
+                  {% for grade in grades %}
+                    <option value="{{ grade.id }}">{{ grade.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nombre (A, B, C...)</label>
+                <input id="sectionName" type="text" required class="input" placeholder="A">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Capacidad</label>
+                <input id="sectionCapacity" type="number" value="40" class="input w-24">
+              </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+              <button type="submit" class="btn-primary flex-1">Guardar</button>
+              <button type="button" onclick="closeSectionModal()" class="btn-secondary flex-1">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Materias Tab -->
+    <div id="panel-subjects" class="card p-6 {% if active_tab != 'subjects' %}hidden{% endif %}">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-semibold text-[#1e3a5f]">Materias / Asignaturas</h2>
+        <button onclick="openSubjectModal()" class="btn-primary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Nueva Materia
+        </button>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Codigo</th>
+              <th>Tipo</th>
+              <th>Grado</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for subject in subjects %}
+            <tr>
+              <td class="font-medium text-[#1e3a5f]">{{ subject.name }}</td>
+              <td class="font-mono text-sm text-slate-500">{{ subject.code }}</td>
+              <td>
+                <span class="badge {% if subject.type == 'technical' %}badge-info{% else %}badge-success{% endif %}">
+                  {% if subject.type == 'technical' %} Tecnico {% else %} General {% endif %}
+                </span>
+              </td>
+              <td class="text-slate-500">{{ subject.grade.name }}</td>
+              <td>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" {% if subject.is_active %}checked{% endif %}
+                         onchange="toggleSubjectActive({{ subject.id }}, this.checked)"
+                         class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#2d6da8]/20 rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#e2e8f0] after:border after:rounded-full after:h-4 after:w-8 after:transition-all peer-checked:bg-[#2d6da8]"></div>
+                </label>
+              </td>
+              <td>
+                <button onclick="editSubject({{ subject.id }})" class="btn-secondary btn-sm">Editar</button>
+                <button onclick="deleteSubject({{ subject.id }})" class="btn-danger btn-sm">Eliminar</button>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Subject Modal -->
+      <div id="subjectModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+          <h3 class="text-lg font-semibold text-[#1e3a5f] mb-4" id="subjectModalTitle">Nueva Materia</h3>
+          <form id="subjectForm" onsubmit="saveSubject(event)">
+            <input type="hidden" id="subjectId">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
+                <input id="subjectName" type="text" required class="input" placeholder="Matematicas">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Codigo</label>
+                <input id="subjectCode" type="text" required class="input font-mono" placeholder="MAT-5TO">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
+                <select id="subjectType" class="input">
+                  <option value="general">General</option>
+                  <option value="technical">Tecnico</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Grado</label>
+                <select id="subjectGrade" required class="input">
+                  <option value="">— Selecciona —</option>
+                  {% for grade in grades %}
+                    <option value="{{ grade.id }}">{{ grade.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="flex items-center gap-3 pt-2">
+                <input id="subjectActive" type="checkbox" checked class="rounded border-slate-300 text-[#2d6da8] focus:ring-[#2d6da8]">
+                <label for="subjectActive" class="text-sm text-slate-600">Materia activa</label>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+              <button type="submit" class="btn-primary flex-1">Guardar</button>
+              <button type="button" onclick="closeSubjectModal()" class="btn-secondary flex-1">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let activeTab = '{{ active_tab if active_tab else "grades" }}';
+
+  function switchTab(tab) {
+    activeTab = tab;
+    ['grades', 'sections', 'subjects'].forEach(t => {
+      document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
+      document.getElementById('tab-' + t).className =
+        'px-5 py-2.5 rounded-lg text-sm font-medium transition ' +
+        (t === tab ? 'bg-[#1e3a5f] text-white' : 'text-slate-600 hover:text-slate-800');
+    });
+  }
+
+  // ---------- Grados ----------
+  function openGradeModal(gradeId = null) {
+    const modal = document.getElementById('gradeModal');
+    const title = document.getElementById('gradeModalTitle');
+    if (gradeId) {
+      title.textContent = 'Editar Grado';
+      fetch('/admin/api/grades/' + gradeId)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('gradeId').value = data.id;
+          document.getElementById('gradeName').value = data.name;
+          document.getElementById('gradeCode').value = data.code;
+          document.getElementById('gradeYear').value = data.school_year;
+          document.getElementById('gradeSeq').value = data.seq;
+          document.getElementById('gradeActive').checked = data.is_active;
+        });
+    } else {
+      title.textContent = 'Nuevo Grado';
+      document.getElementById('gradeForm').reset();
+      document.getElementById('gradeId').value = '';
+    }
+    modal.classList.remove('hidden');
+  }
+  function closeGradeModal() { document.getElementById('gradeModal').classList.add('hidden'); }
+
+  function saveGrade(e) {
+    e.preventDefault();
+    const id = document.getElementById('gradeId').value;
+    const data = new FormData();
+    data.append('name', document.getElementById('gradeName').value);
+    data.append('code', document.getElementById('gradeCode').value);
+    data.append('school_year', document.getElementById('gradeYear').value);
+    data.append('seq', document.getElementById('gradeSeq').value);
+    data.append('is_active', document.getElementById('gradeActive').checked ? 'on' : '');
+    const url = id ? '/admin/api/grades/' + id : '/admin/api/grades';
+    const method = id ? 'PUT' : 'POST';
+    fetch(url, { method, body: data })
+      .then(r => r.json())
+      .then(() => { closeGradeModal(); location.reload(); })
+      .catch(err => alert('Error: ' + err.message));
+  }
+  function deleteGrade(id) {
+    if (!confirm('Eliminar este grado?')) return;
+    fetch('/admin/api/grades/' + id, { method: 'DELETE' })
+      .then(() => location.reload());
+  }
+  function updateGradeSeq(id, val) {
+    fetch('/admin/api/grades/' + id, { method: 'PUT', body: new FormData().append('seq', val) })
+      .catch(() => {});
+  }
+  function toggleGradeActive(id, active) {
+    fetch('/admin/api/grades/' + id, {
+      method: 'PUT',
+      body: new FormData().append('is_active', active ? 'on' : '')
+    }).catch(() => {});
+  }
+  function editGrade(id) { openGradeModal(id); }
+
+  // ---------- Secciones ----------
+  function openSectionModal(sectionId = null) {
+    const modal = document.getElementById('sectionModal');
+    const title = document.getElementById('sectionModalTitle');
+    if (sectionId) {
+      title.textContent = 'Editar Seccion';
+      fetch('/admin/api/sections/' + sectionId)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('sectionId').value = data.id;
+          document.getElementById('sectionName').value = data.name;
+          document.getElementById('sectionCapacity').value = data.capacity;
+        });
+    } else {
+      title.textContent = 'Nueva Seccion';
+      document.getElementById('sectionForm').reset();
+      document.getElementById('sectionId').value = '';
+    }
+    modal.classList.remove('hidden');
+  }
+  function closeSectionModal() { document.getElementById('sectionModal').classList.add('hidden'); }
+  function saveSection(e) {
+    e.preventDefault();
+    const id = document.getElementById('sectionId').value;
+    const data = new FormData();
+    data.append('grade_id', document.getElementById('sectionGrade').value);
+    data.append('name', document.getElementById('sectionName').value);
+    data.append('capacity', document.getElementById('sectionCapacity').value);
+    const url = id ? '/admin/api/sections/' + id : '/admin/api/sections';
+    const method = id ? 'PUT' : 'POST';
+    fetch(url, { method, body: data })
+      .then(r => r.json())
+      .then(() => { closeSectionModal(); location.reload(); });
+  }
+  function deleteSection(id) {
+    if (!confirm('Eliminar esta seccion?')) return;
+    fetch('/admin/api/sections/' + id, { method: 'DELETE' })
+      .then(() => location.reload());
+  }
+  function updateSectionCapacity(id, val) {
+    fetch('/admin/api/sections/' + id, { method: 'PUT', body: new FormData().append('capacity', val) })
+      .catch(() => {});
+  }
+  function editSection(id) { openSectionModal(id); }
+
+  // ---------- Materias ----------
+  function openSubjectModal(subjectId = null) {
+    const modal = document.getElementById('subjectModal');
+    const title = document.getElementById('subjectModalTitle');
+    if (subjectId) {
+      title.textContent = 'Editar Materia';
+      fetch('/admin/api/subjects/' + subjectId)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('subjectId').value = data.id;
+          document.getElementById('subjectName').value = data.name;
+          document.getElementById('subjectCode').value = data.code;
+          document.getElementById('subjectType').value = data.type;
+          document.getElementById('subjectGrade').value = data.grade_id;
+          document.getElementById('subjectActive').checked = data.is_active;
+        });
+    } else {
+      title.textContent = 'Nueva Materia';
+      document.getElementById('subjectForm').reset();
+      document.getElementById('subjectId').value = '';
+    }
+    modal.classList.remove('hidden');
+  }
+  function closeSubjectModal() { document.getElementById('subjectModal').classList.add('hidden'); }
+  function saveSubject(e) {
+    e.preventDefault();
+    const id = document.getElementById('subjectId').value;
+    const data = new FormData();
+    data.append('name', document.getElementById('subjectName').value);
+    data.append('code', document.getElementById('subjectCode').value);
+    data.append('type', document.getElementById('subjectType').value);
+    data.append('grade_id', document.getElementById('subjectGrade').value);
+    data.append('is_active', document.getElementById('subjectActive').checked ? 'on' : '');
+    const url = id ? '/admin/api/subjects/' + id : '/admin/api/subjects';
+    const method = id ? 'PUT' : 'POST';
+    fetch(url, { method, body: data })
+      .then(r => r.json())
+      .then(() => { closeSubjectModal(); location.reload(); });
+  }
+  function deleteSubject(id) {
+    if (!confirm('Eliminar esta materia?')) return;
+    fetch('/admin/api/subjects/' + id, { method: 'DELETE' })
+      .then(() => location.reload());
+  }
+  function toggleSubjectActive(id, active) {
+    fetch('/admin/api/subjects/' + id, {
+      method: 'PUT',
+      body: new FormData().append('is_active', active ? 'on' : '')
+    }).catch(() => {});
+  }
+  function editSubject(id) { openSubjectModal(id); }
+
+  // Init
+  switchTab(activeTab);
+</script>
+{% endblock %}

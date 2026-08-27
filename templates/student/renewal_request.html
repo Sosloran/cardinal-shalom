@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Renovar Grado — Cardinal Shalom{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-[#f8fafc]">
+  <div class="max-w-3xl mx-auto px-6 py-8">
+
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-full bg-[#e2e8f0] flex items-center justify-center text-xl">👤</div>
+      <div>
+        <h1 class="text-2xl font-bold text-[#1e3a5f]">Solicitar Renovacion de Grado</h1>
+        <p class="text-slate-500 mt-1">{{ user.full_name }} · {{ my_grade_name }} · {{ my_section_name }}</p>
+      </div>
+    </div>
+
+    {% if existing %}
+      <div class="card p-6 mb-6" style="border-left: 4px solid #f5b342;">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-[#fef3c7] flex items-center justify-center text-xl">⏳</div>
+          <div>
+            <h2 class="font-semibold text-[#f5b342]">Solicitud Pendiente</h2>
+            <p class="text-sm text-slate-500">Ya enviaste una solicitud de renovacion que esta siendo revisada.</p>
+          </div>
+        </div>
+        <div class="p-3 bg-[#fef3c7] rounded-lg flex items-center justify-between">
+          <div class="text-sm">
+            <span class="font-medium text-[#1e3a5f]">De:</span> {{ existing.current_grade.name if existing.current_grade else '—' }}
+            → <span class="font-medium text-[#1e3a5f]">A:</span> {{ existing.requested_grade.name if existing.requested_grade else '—' }}
+          </div>
+          <div class="text-xs text-slate-500">
+            Solicitado: {{ existing.requested_at[:10] if existing.requested_at else '—' }}
+          </div>
+        </div>
+        <div class="mt-3 text-sm text-slate-400">
+          El administrador academico revisara tu solicitud. No puedes enviar otra mientras esta pendiente.
+        </div>
+      </div>
+    {% endif %}
+
+    {% if not existing or existing.status == 'rejected' %}
+      <div class="card p-6">
+        <div class="form-section-title mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Nuevo Pedido de Renovacion
+        </div>
+        <p class="text-sm text-slate-500 mb-5">
+          Al finalizar el ano escolar, puedes solicitar pasar al siguiente grado.
+          El administrador academico revisara tu solicitud y las calificaciones del ano.
+        </p>
+
+        <div class="card p-4 mb-4" style="border: 1px solid #e2e8f0;">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 rounded bg-[#e8f0f8] flex items-center justify-center text-sm font-bold text-[#1e3a5f]">
+              Actual
+            </div>
+            <div>
+              <div class="font-medium text-[#1e3a5f]">{{ my_grade_name }}</div>
+              <div class="text-xs text-slate-400">{{ my_section_name }}</div>
+            </div>
+          </div>
+        </div>
+
+        <form method="POST" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Grado al que deseas renovar</label>
+            <select name="requested_grade_id" required class="input">
+              <option value="">— Selecciona el grado —</option>
+              {% for g in grades %}
+                {% if g != my_grade %}
+                  <option value="{{ g.id }}">{{ g.name }} — {{ g.school_year }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="p-3 bg-[#e8f0f8] rounded-lg flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#2d6da8] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="text-sm text-slate-600">
+              El administrador academico revisara si cumples con los requisitos academicos antes de aprobar la renovacion.
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="submit" class="btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Enviar Solicitud
+            </button>
+            <a href="{{ url_for('dashboard') }}" class="btn-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
