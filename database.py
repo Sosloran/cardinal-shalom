@@ -498,4 +498,10 @@ class Setting(Base):
 
 
 def init_db():
+    """Inicializar la base de datos en el envío correcto según la URI configurada."""
+    db_path = os.environ.get("DB_PATH", os.path.join(os.path.dirname(__file__), "cardinal_shalom.db"))
+    if _DATABASE_URL.startswith("sqlite"):
+        db_dir = os.path.dirname(db_path)
+        os.makedirs(db_dir, exist_ok=True)
     Base.metadata.create_all(_engine)
+    return True
