@@ -11,25 +11,25 @@ from flask import (
     flash, session, jsonify, send_from_directory, abort,
 )
 
-from database import (
-    init_db, get_db, User, Grade, Section, Subject, LearningOutcome,
-    Task, Submission, PortfolioEvidence, Activity, Book, Course,
-    ChatbotKnowledge, GradeRenewal, StudentScore, Setting,
-    login_required, role_required, sanitize_html, now, today,
-    _get_user, clear_user_cache, joinedload,
-)
-
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "cardinal-shalom-beta-secret-2026")
-app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(__file__), "uploads")
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
-
-os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("cardinal-shalom")
-
 init_db()
+
+# =================== Auto-seed de producción ===================
+# Si la BD está vacía al iniciar (prime deploy con PostgreSQL), ejecutar seed automático.
+try:
+    from database import SessionLocal
+    db = SessionLocal()
+    try:
+        has_users = db.query(User).count() > 0
+    finally:
+        db.close()
+
+    if not has_users:
+        logger.warning("BD vacía detectada — ejecutando seed de producción...")
+        from seed import seed
+        seed()
+        logger.warning("Seed de producción completado.")
+except Exception as e:
+    logger.error(f"Auto-seed skipped due to error: {e}")
 
 # =================== Endpoint manual para ejecutar seed ===================
 @app.route("/_seed", methods=["GET"])
