@@ -31,6 +31,19 @@ logger = logging.getLogger("cardinal-shalom")
 
 init_db()
 
+# =================== Auto-seed de producción ===================
+# Si la BD está vacía al iniciar (prime deploy con PostgreSQL), ejecutar seed automático.
+from database import SessionLocal
+db = SessionLocal()
+try:
+    has_users = db.query(User).count() > 0
+finally:
+    db.close()
+
+if not has_users:
+    logger.warning("BD vacía detectada — ejecutando seed de producción...")
+    from seed import seed
+    seed()
 
 # =================== Auth ===================
 
