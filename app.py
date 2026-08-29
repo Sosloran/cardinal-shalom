@@ -33,17 +33,47 @@ init_db()
 
 # =================== Auto-seed de producción ===================
 # Si la BD está vacía al iniciar (prime deploy con PostgreSQL), ejecutar seed automático.
-from database import SessionLocal
-db = SessionLocal()
 try:
-    has_users = db.query(User).count() > 0
-finally:
-    db.close()
+    from database import SessionLocal
+    db = SessionLocal()
+    try:
+        has_users = db.query(User).count() > 0
+    finally:
+        db.close()
 
-if not has_users:
-    logger.warning("BD vacía detectada — ejecutando seed de producción...")
-    from seed import seed
-    seed()
+    if not has_users:
+        logger.warning("BD vacía detectada — ejecutando seed de producción...")
+        from seed import seed
+        seed()
+        logger.warning("Seed de producción completado.")
+except Exception as e:
+    logger.error(f"Auto-seed skipped due to error: {e}")
+
+# =================== Endpoint manual para ejecutar seed ===================
+@app.route("/_seed", methods=["GET"])
+def run_seed_endpoint():
+    """Endpoint para ejecutar el seed manualmente (solo para admins o cuando la BD está vacía)."""
+    try:
+        db = next(get_db())
+        try:
+            user_count = db.query(User).count()
+            if user_count > 0:
+                db.close()
+                logger.info(f"Seed skip: BD ya tiene {user_count} usuarios")
+                return jsonify({"status": "skip", "message": f"La BD ya tiene {user_count} usuarios. No es necesario ejecutar seed."}), 200
+
+            from seed import seed
+            seed()
+            db.close()
+            logger.warning("Seed de producción ejecutado manualmente.")
+            return jsonify({"status": "done", "message": "Seed completado exitosamente."}), 200
+        except Exception as e:
+            db.close()
+            logger.error(f"Error en seed manual: {e}")
+            return jsonify({"status": "error", "message": str(e)}), 500
+    except Exception as e:
+        logger.error(f"Error al obtener DB para seed: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 # =================== Auth ===================
 
