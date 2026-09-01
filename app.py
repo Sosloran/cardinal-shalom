@@ -14,7 +14,7 @@ from flask import (
 from database import (
     init_db, SessionLocal, User, get_db, Setting,
     hash_password, check_password, _get_user, clear_user_cache,
-    now, role_required, login_required, logger,
+    now, role_required, login_required,
 )
 from database import Base
 
@@ -25,6 +25,16 @@ from flask import (
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
+
+# Logger
+logger = logging.getLogger("cardinal-shalom")
+logger.setLevel(logging.INFO)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    ))
+    logger.addHandler(handler)
 
 # Initialize database
 init_db()
