@@ -65,6 +65,12 @@ def run_seed_endpoint():
         logger.error(f"Error al obtener DB para seed: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# =================== Landing Page (mapped to / ) ===================
+
+@app.route("/")
+def landing():
+    return render_template("index.html")
+
 # =================== Auth ===================
 
 @app.route("/login", methods=["GET", "POST"])

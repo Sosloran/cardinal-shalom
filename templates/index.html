@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colegio Evangelico Shalom — Educación Integral con Visión Futura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ═══════════════ HEADER / NAV ═══════════════ -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="navbar-brand">
+        <div class="brand-logo">CS</div>
+        <div>
+          <div class="brand-text">Colegio Evangelico Shalom</div>
+          <div class="brand-sub">Politécnico · Comercio y Marketing Digital</div>
+        </div>
+      </a>
+      <div class="navbar-nav">
+        <a href="#inicio" class="nav-link active">Inicio</a>
+        <a href="#niveles" class="nav-link">Niveles</a>
+        <a href="#admisiones" class="nav-link">Admisiones</a>
+        <a href="#noticias" class="nav-link">Noticias</a>
+        <a href="#catalogo" class="nav-link">Uniformes</a>
+        <a href="#contacto" class="nav-link">Contacto</a>
+        <a href="/login" class="nav-cta">Portal Estudiantil</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════ HERO SECTION ═══════════════ -->
+  <section class="hero" id="inicio">
+    <div class="hero-content container">
+      <div class="hero-badge"> matricula 2026-2027 abierto</div>
+      <h1>Formando líderes del mañana con tecnología y valores</h1>
+      <p>
+        En Cardinal Shalom combinamos educación evangelica de excelencia con
+        formación técnica en Comercio y Marketing Digital. Nivel Inicial,
+        Primario, Secundario y Técnico-Profesional.
+      </p>
+      <div class="hero-btns">
+        <a href="#admisiones" class="btn btn-primary">Matrícúlate Aquí</a>
+        <a href="#niveles" class="btn btn-outline">Conócenos</a>
+      </div>
+    </div>
+    <!-- canvas partículas -->
+    <canvas id="particle-canvas"></canvas>
+  </section>
+
+  <!-- ═══════════════ NIVELES EDUCATIVOS ═══════════════ -->
+  <section class="container" id="niveles">
+    <div class="text-center mb-6">
+      <div class="hero-badge" style="margin:0 auto 12px;">oferta académica</div>
+      <h2 class="text-center" style="font-size:1.8rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.02em;">
+        Niveles Educativos
+      </h2>
+      <p class="text-center text-secondary mt-4" style="max-width:560px;margin:0 auto;">
+        De la primera infancia hasta la preparación universitaria y profesional.
+      </p>
+    </div>
+
+    <div class="levels-grid">
+      <!-- Nivel Inicial -->
+      <div class="level-card glass">
+        <div class="level-icon">🌱</div>
+        <div class="level-name">Nivel Inicial</div>
+        <div class="level-sub">Preescolar · Maternal</div>
+        <div class="level-desc">
+          Estimulación temprana, motricidad, lenguaje y primeros pasos en el mundo digital
+          con actividades lúdicas y tecnología educativa.
+        </div>
+        <a href="#admisiones" class="btn btn-outline btn-sm mt-4" style="width:100%;justify-content:center;">Saber más</a>
+      </div>
+
+      <!-- Primario -->
+      <div class="level-card glass">
+        <div class="level-icon">📚</div>
+        <div class="level-name">Nivel Primario</div>
+        <div class="level-sub">1ero a 6to de Primaria</div>
+        <div class="level-desc">
+          Formación académica sólida con enfoque en lectoescritura, matemáticas, ciencias
+          y tecnologías de la información. Rutas personalizadas de aprendizaje.
+        </div>
+        <a href="#admisiones" class="btn btn-outline btn-sm mt-4" style="width:100%;justify-content:center;">Saber más</a>
+      </div>
+
+      <!-- Secundario -->
+      <div class="level-card glass">
+        <div class="level-icon">🎓</div>
+        <div class="level-name">Nivel Secundario</div>
+        <div class="level-sub">7mo a 12mo de Secundaria</div>
+        <div class="level-desc">
+          Preparación preuniversitaria con énfasis en bachillerato integral.
+          Tutorías académicas, proyectos investigativos y competencias digitales.
+        </div>
+        <a href="#admisiones" class="btn btn-outline btn-sm mt-4" style="width:100%;justify-content:center;">Saber más</a>
+      </div>
+
+      <!-- Técnico-Profesional -->
+      <div class="level-card glass">
+        <div class="level-icon">⚡</div>
+        <div class="level-name">Técnico-Profesional</div>
+        <div class="level-sub">Polítecnico Comercio y Marketing Digital</div>
+        <div class="level-desc">
+          Formación técnica dual: bachillerato + certificación en Comercio,
+          Marketing Digital, Contabilidad Básica y Técnicas de Venta.
+          Inserción laboral garantizada.
+        </div>
+        <a href="#catalogo" class="btn btn-primary btn-sm mt-4" style="width:100%;justify-content:center;">Ver uniformes</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- ═══════════════ SECCIÓN ADMISIONES ═══════════════ -->
+  <section class="container" id="admisiones" style="padding:80px 0;">
+    <div class="text-center mb-6">
+      <div class="hero-badge" style="margin:0 auto 12px;">admisiones 2026-2027</div>
+      <h2 class="text-center" style="font-size:1.8rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.02em;">
+        Inscripciones Abiertas
+      </h2>
+      <p class="text-center text-secondary mt-4" style="max-width:560px;margin:0 auto;">
+        El proceso de admisión es 100% digital. Completa el formulario y nuestro equipo
+        académico te contactará en menos de 48 horas.
+      </p>
+    </div>
+
+    <div class="admissions-steps">
+      <div class="admission-step glass">
+        <div class="step-num">1</div>
+        <div class="step-title">Completa el formulario</div>
+        <div class="step-desc">Ingresa tus datos básicos y selecciona el nivel que deseas.</div>
+      </div>
+      <div class="admission-step glass">
+        <div class="step-num">2</div>
+        <div class="step-title">Entrevista virtual</div>
+        <div class="step-desc">Conversamos con el estudiante y los padres/tutores por videoconferencias.</div>
+      </div>
+      <div class="admission-step glass">
+        <div class="step-num">3</div>
+        <div class="step-title">Evaluación_académica</div>
+        <div class="step-desc">Prueba diagnóstica breve para asignar el grupo y nivel adecuado.</div>
+      </div>
+      <div class="admission-step glass">
+        <div class="step-num">4</div>
+        <div class="step-title">Confirmación y bienvenida</div>
+        <div class="step-desc">Recibes tu matrícula, horarios y acceso al Portal Estudiantil.</div>
+      </div>
+    </div>
+
+    <div class="glass mt-6" style="padding:32px;border:1px solid var(--glass-border);">
+      <div class="flex" style="justify-content:center;gap:16px;flex-wrap:wrap;">
+        <a href="#" class="btn btn-primary">Solicitar Información</a>
+        <a href="#" class="btn btn-outline">Ver Requisitos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CATÁLOGO DE UNIFORMES ═══════════════ -->
+  <section class="container" id="catalogo" style="padding:80px 0 60px;">
+    <div class="text-center mb-6">
+      <div class="hero-badge" style="margin:0 auto 12px;">tienda escolar</div>
+      <h2 class="catalog-title text-center">Catálogo de Uniformes y Útiles</h2>
+      <p class="catalog-sub text-center">
+        Toda la indumentaria y material escolar del Colegio Shalom.
+        Filtra por nivel, género y categoría.
+      </p>
+    </div>
+
+    <!-- buscador + filtros -->
+    <div class="catalog-header">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="catalog-search" placeholder="Buscar producto..." oninput="filterCatalog()">
+      </div>
+      <div class="catalog-filters" id="catalog-filters">
+        <button class="filter-chip active" onclick="setFilter('all')">Todos</button>
+        <button class="filter-chip" onclick="setFilter('inicial')">Nivel Inicial</button>
+        <button class="filter-chip" onclick="setFilter('primario')">Primario</button>
+        <button class="filter-chip" onclick="setFilter('secundario')">Secundario</button>
+        <button class="filter-chip" onclick="setFilter('tecnico')">Técnico</button>
+        <button class="filter-chip" onclick="setFilter('unisex')">Unisex</button>
+        <button class="filter-chip" onclick="setFilter('masculino')">Masculino</button>
+        <button class="filter-chip" onclick="setFilter('femenino')">Femenino</button>
+        <button class="filter-chip" onclick="setFilter('uniformes')">Uniformes</button>
+        <button class="filter-chip" onclick="setFilter('utiles')">Útiles</button>
+        <button class="filter-chip" onclick="setFilter('accesorios')">Accesorios</button>
+      </div>
+    </div>
+
+    <!-- grid productos -->
+    <div class="catalog-grid" id="catalog-grid">
+      <!-- renderizado por JS -->
+    </div>
+
+    <div class="text-center mt-6">
+      <button class="btn btn-outline" onclick="location.reload()">↻ Resetear filtros</button>
+      <span class="text-muted text-sm ml-4" id="catalog-count"></span>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- ═══════════════ NOTICIAS Y TESTIMONIOS ═══════════════ -->
+  <section class="container" id="noticias" style="padding:60px 0 80px;">
+    <div class="text-center mb-6">
+      <div class="hero-badge" style="margin:0 auto 12px;">últimas novedades</div>
+      <h2 style="font-size:1.8rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.02em;">
+        Noticias y Eventos
+      </h2>
+      <p class="text-secondary mt-4" style="max-width:560px;margin:0 auto;">
+        Avisos del MINERD, eventos escolares, logros académicos y más.
+      </p>
+    </div>
+
+    <div class="news-carousel" id="news-carousel">
+      <div class="news-card glass">
+        <div class="news-tag">aviso minerd</div>
+        <div class="news-title">Calendarización de exámenes nacionales 2026</div>
+        <div class="news-excerpt">Resolución ministerial actualizada: fechas de evaluación y calendario académico para el presente school year.</div>
+        <div class="news-date">Hace 3 días · Centro de Educación</div>
+      </div>
+      <div class="news-card glass">
+        <div class="news-tag">logro escolar</div>
+        <div class="news-title">Our students win local robotics competition</div>
+        <div class="news-excerpt">El equipo de robótica del 5to de Secundaria obtuvo el primer lugar en la feria tecnológica provincial.</div>
+        <div class="news-date">Hace 1 semana · Académico</div>
+      </div>
+      <div class="news-card glass">
+        <div class="news-tag">evento</div>
+        <div class="news-title">Jornada de puertas abiertas — Sábado 15 de agosto</div>
+        <div class="news-excerpt">Ven a conocer nuestras instalaciones, observa clases en vivo y habla con nuestros docentes. Inscripción gratuita.</div>
+        <div class="news-date">Hace 2 semanas · Admisiones</div>
+      </div>
+      <div class="news-card glass">
+        <div class="news-tag">noticia</div>
+        <div class="news-title">Nuevo laboratorio de informática con 40 equipos actualizados</div>
+        <div class="news-excerpt">Invertimos en infraestructura tecnológica para garantizar la formación digital de nuestros estudiantes.</div>
+        <div class="news-date">Hace 3 semanas · Infraestructura</div>
+      </div>
+      <div class="news-card glass">
+        <div class="news-tag">testimonio</div>
+        <div class="news-title">"Shalom me dio las herramientas para emprender"</div>
+        <div class="news-excerpt">Testimonio de ex-estudiante ahora profesional en marketing digital. La formación técnica marcó la diferencia.</div>
+        <div class="news-date">Hace 1 mes · Comunidad</div>
+      </div>
+    </div>
+
+    <div class="text-center mt-6">
+      <button class="btn btn-outline" style="width:100%;justify-content:center;max-width:280px;margin:0 auto;">Ver todas las noticias →</button>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="site-footer" id="contacto">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <p>📍 Av. Principal #123, Santo Domingo</p>
+          <p>📞 +1 (809) 555-0100</p>
+          <p>📧 info@colegioevangelicoshalomrd.com</p>
+          <p>🕐 Lun-Vier: 7:30am – 4:00pm</p>
+        </div>
+        <div class="footer-col">
+          <h4>Enlaces Rápidos</h4>
+          <a href="#inicio">Inicio</a>
+          <a href="#niveles">Niveles Educativos</a>
+          <a href="#admisiones">Admisiones</a>
+          <a href="#catalogo">Uniformes</a>
+          <a href="#noticias">Noticias</a>
+        </div>
+        <div class="footer-col">
+          <h4>Servicios</h4>
+          <a href="/login">Portal Estudiantil</a>
+          <a href="#">Biblioteca Virtual</a>
+          <a href="#">Calificaciones en Línea</a>
+          <a href="#">Becas y Ayudas</a>
+          <a href="#">Empleos</a>
+        </div>
+        <div class="footer-col">
+          <h4>Síguenos</h4>
+          <div class="social-links">
+            <a href="#" class="social-btn" title="Facebook">📘</a>
+            <a href="#" class="social-btn" title="Instagram">📷</a>
+            <a href="#" class="social-btn" title="YouTube">📺</a>
+            <a href="#" class="social-btn" title="WhatsApp">💬</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Colegio Evangelico Shalom. Todos los derechos reservados.</p>
+        <p style="margin-top:4px;">Politécnico Comercio y Marketing Digital · Política de Privacidad · Términos de Uso</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════ CHATBOT FLOAT ═══════════════ -->
+  <div id="chatbot-trigger">
+    <button id="chat-trigger-btn" class="chat-trigger-btn" onclick="toggleChatbot()" aria-label="Abrir asistente">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s5 3.582 5 8z" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="chatbot-panel" class="chatbot-panel">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">CS</div>
+      <div>
+        <div class="chatbot-name">Cardinal Shalom Asistente</div>
+        <div class="chatbot-sub">Chatea conmigo para navegar</div>
+      </div>
+      <button onclick="toggleChatbot()" class="chatbot-close" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="chatbot-body" id="chatbot-body">
+      <div class="chat-msg bot">
+        <p>¡Hola! Soy el asistente virtual del Colegio Shalom. Busca información sobre admisiones, uniformes, horarios, noticias o cualquier duda.</p>
+      </div>
+    </div>
+    <div class="chatbot-quick">
+      <button class="quick-btn" onclick="sendQuick('admisiones')">🎓 Admisiones</button>
+      <button class="quick-btn" onclick="sendQuick('uniformes')">👕 Uniformes</button>
+      <button class="quick-btn" onclick="sendQuick('noticias')">📰 Noticias</button>
+      <button class="quick-btn" onclick="sendQuick('horarios')">⏰ Horarios</button>
+      <button class="quick-btn" onclick="sendQuick('contacto')">📞 Contacto</button>
+    </div>
+    <div class="chatbot-input-area">
+      <input id="chatbot-input" class="chatbot-input" type="text" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')sendChatbot()">
+      <button onclick="sendChatbot()" class="chatbot-send" aria-label="Enviar">➤</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+  <!-- Catálogo de uniformes -->
+  <script>
+    // ── Catálogo de productos ──
+    const catalog = [
+      // Nivel Inicial
+      {id:1, nombre:"T-shirt Polos Inicial", categoria:"Uniformes", nivel:"inicial", genero:"unisex",
+       precio:"RD$ 850", stock:120, img:"👕", badge:null},
+      {id:2, nombre:"Pantalón Corto Inicial", categoria:"Uniformes", nivel:"inicial", genero:"unisex",
+       precio:"RD$ 650", stock:95, img:"👖", badge:null},
+      {id:3, nombre:"Franela Inicial X2", categoria:"Uniformes", nivel:"inicial", genero:"unisex",
+       precio:"RD$ 550", stock:150, img:"👕", badge:null},
+      {id:4, nombre:"Estuche Inicial", categoria:"Útiles", nivel:"inicial", genero:"unisex",
+       precio:"RD$ 350", stock:200, img:"🎒", badge:null},
+      {id:5, nombre:"Set Colores Inicial", categoria:"Útiles", nivel:"inicial", genero:"unisex",
+       precio:"RD$ 280", stock:300, img:"🖍️", badge:null},
+
+      // Primario
+      {id:6, nombre:"T-shirt Polos Primaria", categoria:"Uniformes", nivel:"primario", genero:"unisex",
+       precio:"RD$ 900", stock:130, img:"👕", badge:null},
+      {id:7, nombre:"Pantalón Primaria Hombre", categoria:"Uniformes", nivel:"primario", genero:"masculino",
+       precio:"RD$ 750", stock:80, img:"👖", badge:"En stock"},
+      {id:8, nombre:"Falda Primaria Dama", categoria:"Uniformes", nivel:"primario", genero:"femenino",
+       precio:"RD$ 700", stock:45, img:"👗", badge:"Stock bajo"},
+      {id:9, nombre:"Abrigo Sudadera Primaria", categoria:"Uniformes", nivel:"primario", genero:"unisex",
+       precio:"RD$ 1,400", stock:30, img:"🧥", badge:"Stock bajo"},
+      {id:10, nombre:"Set Útiles Primaria", categoria:"Útiles", nivel:"primario", genero:"unisex",
+       precio:"RD$ 580", stock:120, img:"📐", badge:null},
+      {id:11, nombre:"Cuaderno 100hojas", categoria:"Útiles", nivel:"primario", genero:"unisex",
+       precio:"RD$ 120", stock:500, img:"📓", badge:null},
+
+      // Secundario
+      {id:12, nombre:"T-shirt Polos Secundaria", categoria:"Uniformes", nivel:"secundario", genero:"unisex",
+       precio:"RD$ 950", stock:100, img:"👕", badge:null},
+      {id:13, nombre:"Pantalón Secundaria Hombre", categoria:"Uniformes", nivel:"secundario", genero:"masculino",
+       precio:"RD$ 800", stock:60, img:"👖", badge:"En stock"},
+      {id:14, nombre:"Falda Secundaria Dama", categoria:"Uniformes", nivel:"secundario", genero:"femenino",
+       precio:"RD$ 750", stock:25, img:"👗", badge:"Agotado"},
+      {id:15, nombre:"Blusa Secundaria Dama", categoria:"Uniformes", nivel:"secundario", genero:"femenino",
+       precio:"RD$ 650", stock:40, img:"👚", badge:null},
+      {id:16, nombre:"Abrigo Secundaria Universitario", categoria:"Uniformes", nivel:"secundario", genero:"unisex",
+       precio:"RD$ 1,800", stock:18, img:"🧥", badge:"Stock bajo"},
+      {id:17, nombre:"Insignia Shalom Patch", categoria:"Accesorios", nivel:"secundario", genero:"unisex",
+       precio:"RD$ 150", stock:200, img:"🏅", badge:null},
+      {id:18, nombre:"Reloj Escolar Digital", categoria:"Accesorios", nivel:"secundario", genero:"unisex",
+       precio:"RD$ 450", stock:60, img:"⌚", badge:null},
+
+      // Técnico
+      {id:19, nombre:"Blazer Técnico Politécnico", categoria:"Uniformes", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 2,200", stock:22, img:"👔", badge:"Premium"},
+      {id:20, nombre:"Polo Corto Técnico", categoria:"Uniformes", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 1,100", stock:70, img:"👕", badge:null},
+      {id:21, nombre:"Pantalón Técnico Hombre", categoria:"Uniformes", nivel:"tecnico", genero:"masculino",
+       precio:"RD$ 1,200", stock:55, img:"👖", badge:null},
+      {id:22, nombre:"Falda Técnico Dama", categoria:"Uniformes", nivel:"tecnico", genero:"femenino",
+       precio:"RD$ 1,150", stock:0, img:"👗", badge:"Agotado"},
+      {id:23, nombre:"Libreta Técnico Marketing", categoria:"Útiles", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 200", stock:150, img:"📓", badge:null},
+      {id:24, nombre:"Calculadora Científica", categoria:"Útiles", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 650", stock:80, img:"🔢", badge:null},
+      {id:25, nombre:"Set Marcadores Industrial", categoria:"Útiles", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 480", stock:90, img:"🖊️", badge:null},
+      {id:26, nombre:"Badges Colegio Shalom Set 3", categoria:"Accesorios", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 250", stock:45, img:"🏅", badge:null},
+      {id:27, nombre:"Mochila Escolar 28L", categoria:"Accesorios", nivel:"tecnico", genero:"unisex",
+       precio:"RD$ 1,600", stock:35, img:"🎒", badge:null},
+    ];
+
+    let activeFilters = new Set();
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-grid');
+      const q = (document.getElementById('catalog-search').value || '').toLowerCase();
+      const count = document.getElementById('catalog-count');
+
+      const filtered = catalog.filter(p => {
+        // search
+        if (q && !p.nombre.toLowerCase().includes(q) &&
+            !p.categoria.toLowerCase().includes(q) &&
+            !p.nivel.toLowerCase().includes(q) &&
+            !p.genero.toLowerCase().includes(q)) {
+          return false;
+        }
+        // filters
+        if (activeFilters.size > 0) {
+          const matches = [];
+          for (const f of activeFilters) {
+            if (f === 'all') matches.push(true);
+            else if (p.nivel === f || p.genero === f || p.categoria.toLowerCase() === f) {
+              matches.push(true);
+            } else {
+              matches.push(false);
+            }
+          }
+          if (!matches.every(Boolean)) return false;
+        }
+        return true;
+      });
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="product-card glass" data-nivel="${p.nivel}" data-genero="${p.genero}" data-categoria="${p.categoria.toLowerCase()}">
+          <div class="product-img">
+            ${p.badge ? `<div class="product-badge ${p.badge==='Agotado'?'out':''}">${p.badge}</div>` : ''}
+            <span style="font-size:3.5rem;">${p.img}</span>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${p.nombre}</div>
+            <div class="product-category">${p.categoria} · ${p.nivel} · ${p.genero}</div>
+            <div class="product-meta">
+              <span class="product-price">${p.precio}</span>
+              <span class="product-stock">
+                <span class="stock-dot ${p.stock > 50 ? 'in' : p.stock > 0 ? 'low' : 'out'}"></span>
+                ${p.stock > 0 ? p.stock + ' uds' : 'Agotado'}
+              </span>
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-primary btn-sm" onclick="solicitar('${p.nombre}')">Solicitar</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      count.textContent = filtered.length + ' productos encontrados';
+    }
+
+    function setFilter(f) {
+      const chips = document.querySelectorAll('.filter-chip');
+      chips.forEach(ch => {
+        const isActive = (f === 'all' && ch.textContent.trim() === 'Todos') ||
+                         ch.textContent.trim().toLowerCase() === f;
+        ch.classList.toggle('active', isActive);
+      });
+
+      if (f === 'all') {
+        activeFilters.clear();
+        activeFilters.add('all');
+      } else {
+        activeFilters.delete('all');
+        // Si ya está activo, desactivarlo
+        if (activeFilters.has(f)) {
+          activeFilters.delete(f);
+          if (activeFilters.size === 0) activeFilters.add('all');
+        } else {
+          activeFilters.add(f);
+        }
+      }
+      renderCatalog();
+    }
+
+    function filterCatalog() {
+      renderCatalog();
+    }
+
+    function solicitar(nombre) {
+      // Aquí se integraría con el formulario real
+      alert(`✅ Solicitud de "${nombre}" recibida.\nEl departamento de ventas se contactará contigo pronto.`);
+    }
+
+    // ── Chatbot ──
+    const knowledgeBase = [
+      {keywords:['admision','inscripc','matrícula','matricul','ingreso','nuevo','registro','inscribir'],
+       response:'🎓 <b>Admisiones 2026-2027 están abiertas.</b> El proceso es 100% digital: completa el formulario, participa en la entrevista virtual y realiza la evaluación académica. ¿Quieres ir directo al formulario?',
+       links:[{label:' 양식 신청서', url:'#admisiones'}]},
+
+      {keywords:['uniform','indumentaria','vestimenta','ropa','revestir','polos','t-shirt','pantalón','falda','abrig'],
+       response:'👕 <b>Catálogo de uniformes disponible.</b> Tenemos uniformes de diario, educación física y especiales para el Politécnico. Tallas desde 4 hasta adulto.',
+       links:[{label:'Ver catálogo uniformes', url:'#catalogo'}]},
+
+      {keywords:['notic','aviso','event','noticia','boletín','adjunt','minerd','calendario','exam'],
+       response:'📰 <b>Últimas novedades:</b> Avisos del MINERD, calendario de exámenes nacionales, jornada de puertas abiertas y resultados de la feria tecnológica.',
+       links:[{label:'Ver noticias', url:'#noticias'}]},
+
+      {keywords:['horario','hora','jornada','clase','schedule','programa'],
+       response:'⏰ <b>Jornada escolar:</b> Lunes a viernes de 7:30am a 4:00pm. Los horarios por nivel los encuentras en el portal estudiantil después del login.',
+       links:[{label:'Iniciar sesión', url:'/login'}]},
+
+      {keywords:['contact','ubicación','dirección','direccion','lugar','direccion','telefono','telefona','whatsapp','numero'],
+       response:'📞 <b>Contáctanos:</b> Av. Principal #123, Santo Domingo. Tel: +1 (809) 555-0100. Email: info@colegioevangelicoshalomrd.com. Estamos de lunes a viernes 7:30am-4:00pm.',
+       links:[{label:'Ver contacto completo', url:'#contacto'}]},
+
+      {keywords:['nivel','secundari','primari','inicial','tecnico','polite','oferta','materia','asignatura','curso'],
+       response:'📚 <b>Oferta académica:</b> Nivel Inicial (preescolar), Primario (1ero-6to), Secundario (7mo-12mo) y Técnico-Profesional (Comercio y Marketing Digital).',
+       links:[{label:'Ver niveles', url:'#niveles'}]},
+
+      {keywords:['portal','estudiant','login','acceso','account','cuenta','sesión'],
+       response:'🔐 <b>Portal Estudiantil:</b> Inicia sesión con tu email institucional para ver calificaciones, tareas, ranking y portafolio.',
+       links:[{label:'Iniciar sesión', url:'/login'}]},
+
+      {keywords:['beca','ayuda','descuent','economic','financ','pago'],
+       response:'💰 <b>Becas y ayudas:</b> Contamos con opciones de financiamiento y becas prioritarias para familias en situación vulnerable. Consulta con nuestros admisiones.',
+       links:[{label:'Solicitar información', url:'#admisiones'}]},
+
+      {keywords:['ubicación','mapa','lugar','dirección','dónde','donde','como llegar','llegar'],
+       response:'📍 <b>Nos ubicamos en:</b> Av. Principal #123, Santo Domingo. A un bloque de la catedral principal. Estacionamiento disponible.',
+       links:[{label:'Ver mapa de contacto', url:'#contacto'}]},
+
+      {keywords:['profesor','docente','maestro','enseñar','enseñan','clase','teacher'],
+       response:'👨‍🏫 <b>Nuestros docentes:</b> Equipo calificado con especialización en sus áreas. En el nivel técnico, profesionales con experiencia real en el sector comercial.',
+       links:[{label:'Ver más sobre el colegio', url:'#niveles'}]},
+    ];
+
+    function buscarRespuesta(query) {
+      const q = query.toLowerCase();
+      let best = null;
+      let bestScore = 0;
+      for (const kb of knowledgeBase) {
+        let score = 0;
+        for (const kw of kb.keywords) {
+          if (q.includes(kw)) score += 2;
+          else if (kb.keywords.some(k => k.includes(kw) || kw.includes(k))) score += 1;
+        }
+        if (score > bestScore) { bestScore = score; best = kb; }
+      }
+      return best;
+    }
+
+    function sendQuick(keyword) {
+      document.getElementById('chatbot-input').value = keyword;
+      sendChatbot();
+    }
+
+    function sendChatbot() {
+      const input = document.getElementById('chatbot-input');
+      const query = input.value.trim();
+      if (!query) return;
+      const body = document.getElementById('chatbot-body');
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg user';
+      userMsg.innerHTML = `<p>${escapeHtml(query)}</p>`;
+      body.appendChild(userMsg);
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+
+      // Respuesta simulada (RAG local)
+      setTimeout(() => {
+        const kb = buscarRespuesta(query);
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-msg bot';
+        if (kb) {
+          botMsg.innerHTML = `<p>${kb.response}</p>`;
+          if (kb.links && kb.links.length) {
+            const actions = document.createElement('div');
+            actions.className = 'chat-actions';
+            kb.links.forEach(link => {
+              const a = document.createElement('a');
+              a.href = link.url;
+              a.className = 'chat-action-btn';
+              a.textContent = link.label;
+              a.onclick = () => toggleChatbot(); // cerrar tras click
+              actions.appendChild(a);
+            });
+            botMsg.appendChild(actions);
+          }
+        } else {
+          botMsg.innerHTML = `<p>No entendí del todo, pero puedo ayudarte con: <b>admisiones, uniformes, noticias, horarios, contacto, niveles, portal estudiantil.</b> ¿Sobre qué quieres saber?</p>`;
+        }
+        body.appendChild(botMsg);
+        body.scrollTop = body.scrollHeight;
+      }, 400);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function toggleChatbot() {
+      const panel = document.getElementById('chatbot-panel');
+      const btn = document.getElementById('chat-trigger-btn');
+      panel.classList.toggle('open');
+      btn.classList.toggle('active');
+    }
+
+    // ── Partículas canvas ──
+    (function initParticles() {
+      const canvas = document.getElementById('particle-canvas');
+      if (!canvas || window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+      const ctx = canvas.getContext('2d');
+      let w, h, dots = [];
+
+      function resize() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+        w = canvas.width = hero.offsetWidth;
+        h = canvas.height = hero.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const count = Math.min(40, Math.floor(w * h / 25000));
+      dots = Array.from({length: count}, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 0.5,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3,
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+        for (const d of dots) {
+          d.x += d.dx; d.y += d.dy;
+          if (d.x < 0) d.x = w; if (d.x > w) d.x = 0;
+          if (d.y < 0) d.y = h; if (d.y > h) d.y = 0;
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // lines entre puntos cercanos
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.06)';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < dots.length; i++) {
+          for (let j = i + 1; j < dots.length; j++) {
+            const dx = dots[i].x - dots[j].x;
+            const dy = dots[i].y - dots[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) {
+              ctx.beginPath();
+              ctx.moveTo(dots[i].x, dots[i].y);
+              ctx.lineTo(dots[j].x, dots[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ── Smooth scroll para links internos ──
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      });
+    });
+
+    // ── Navbar scroll effect ──
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      const scrollY = window.scrollY;
+      if (scrollY > 60) {
+        nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.4)';
+      } else {
+        nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+      }
+      lastScroll = scrollY;
+    });
+
+    // ── Init ──
+    renderCatalog();
+  </script>
+
+</body>
+</html>
