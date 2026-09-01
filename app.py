@@ -65,12 +65,6 @@ def run_seed_endpoint():
         logger.error(f"Error al obtener DB para seed: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# =================== Landing Page (mapped to / ) ===================
-
-@app.route("/")
-def landing():
-    return render_template("index.html")
-
 # =================== Auth ===================
 
 @app.route("/login", methods=["GET", "POST"])
@@ -191,7 +185,17 @@ def logout():
 
 # =================== Dashboard ===================
 
+# =================== Landing Page ===================
+
 @app.route("/")
+def landing():
+    # Si hay sesión activa, redirigir al dashboard
+    if session.get("user_id"):
+        return redirect(url_for("dashboard"))
+    return render_template("index.html")
+
+# =================== Dashboard ===================
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
