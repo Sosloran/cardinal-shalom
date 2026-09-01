@@ -11,25 +11,23 @@ from flask import (
     flash, session, jsonify, send_from_directory, abort,
 )
 
+from database import (
+    init_db, SessionLocal, User, get_db, Setting,
+    hash_password, check_password, _get_user, clear_user_cache,
+    now, role_required, login_required, logger,
+)
+from database import Base
+
+from flask import (
+    Flask, render_template, request, redirect, url_for,
+    flash, session, jsonify, send_from_directory, abort,
+)
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
+
+# Initialize database
 init_db()
-
-# =================== Auto-seed de producción ===================
-# Si la BD está vacía al iniciar (prime deploy con PostgreSQL), ejecutar seed automático.
-try:
-    from database import SessionLocal
-    db = SessionLocal()
-    try:
-        has_users = db.query(User).count() > 0
-    finally:
-        db.close()
-
-    if not has_users:
-        logger.warning("BD vacía detectada — ejecutando seed de producción...")
-        from seed import seed
-        seed()
-        logger.warning("Seed de producción completado.")
-except Exception as e:
-    logger.error(f"Auto-seed skipped due to error: {e}")
 
 # =================== Endpoint manual para ejecutar seed ===================
 @app.route("/_seed", methods=["GET"])

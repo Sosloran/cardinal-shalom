@@ -128,6 +128,11 @@ def get_db():
         sess.close()
         _db_stack.pop()
 
+def init_db():
+    """Initialize DB tables on first import."""
+    from database import _engine, Base
+    Base.metadata.create_all(bind=_engine)
+
 
 class User(Base):
     __tablename__ = "users"
