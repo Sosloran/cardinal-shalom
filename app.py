@@ -36,8 +36,11 @@ if not logger.handlers:
     ))
     logger.addHandler(handler)
 
-# Initialize database
-init_db()
+# Initialize database (best effort — server won't crash if DB unavailable)
+try:
+    init_db()
+except Exception as e:
+    logger.warning(f"init_db() deferred: {e} — will retry on first request")
 
 # =================== Endpoint manual para ejecutar seed ===================
 @app.route("/_seed", methods=["GET"])
