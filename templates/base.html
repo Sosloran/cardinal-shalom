@@ -3,143 +3,312 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Cardinal Shalom{% endblock %}</title>
+  <title>{% block title %}Cardinal Shalom — Colegio Evangelico{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen relative overflow-hidden">
+<body class="min-h-screen flex flex-col">
 
-  <!-- Navbar -->
+  <!-- ═══════════ NAVBAR GLASS FLOTANTE ═══════════ -->
   <nav class="navbar">
     <div class="container">
-      <div class="flex items-center justify-between">
+      <div class="navbar-container">
+        <!-- Logo -->
         <a href="{{ url_for('dashboard') }}" class="navbar-brand">
-          <div class="logo-icon">CS</div>
+          <div class="brand-logo">CS</div>
           <div>
             <div class="brand-text">Cardinal Shalom</div>
-            <div class="brand-sub">Plataforma Educativa</div>
+            <div class="brand-sub">Colegio Evangelico</div>
           </div>
         </a>
-        <div class="navbar-right">
-          {% if session.get("user_id") %}
-            <span class="user-badge">
-              <div class="avatar-sm">{{ (user.full_name[0] if user else '?').upper() }}</div>
-              <span class="font-semibold text-sm">{{ user.full_name if user else "" }}</span>
-            </span>
-            <span class="badge-role badge-{{ user.role if user else 'student' }}">{{ user.role if user else "" }}</span>
-            <a href="{{ url_for('logout') }}" class="btn btn-ghost btn-sm">Cerrar sesión</a>
-          {% endif %}
+
+        <!-- Navegación principal -->
+        <div class="navbar-nav">
+          <a href="#inicio" class="nav-link {% if request.path == '/' %}active{% endif %}">Inicio</a>
+          <a href="#nosotros" class="nav-link">Nosotros</a>
+          <a href="#oferta" class="nav-link">Oferta Académica</a>
+          <a href="#admisiones" class="nav-link">Admisiones</a>
+          <a href="#eventos" class="nav-link">Eventos</a>
+          <a href="#contacto" class="nav-link">Contacto</a>
+          <a href="{{ url_for('portal_estudiantil', _external=True) }}" class="nav-cta">
+            🎓 Portal Estudiantil
+          </a>
         </div>
+
+        <!-- Usuario logueado -->
+        {% if session.get("user_id") %}
+          <div class="nav-user">
+            {% if user %}
+              <div class="avatar-sm" title="{{ user.full_name }}">{{ (user.full_name[0] if user else '?').upper() }}</div>
+              <span class="badge-role">{{ user.role }}</span>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn-ghost btn-sm">Cerrar sesión</a>
+          </div>
+        {% endif %}
       </div>
     </div>
   </nav>
 
-  <!-- Flash messages -->
+  <!-- ═══════════ FLASH MESSAGES ═══════════ -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 relative z-20">
+      <div class="container relative z-20 pt-3">
         {% for category, message in messages %}
-          <div class="flash flash-{{ category }} rounded-xl px-5 py-3 mb-3 text-sm font-medium border-l-4">
-            {{ message }}
-          </div>
+          <div class="flash-msg flash-{{ category}}">{{ message }}</div>
         {% endfor %}
       </div>
     {% endif %}
   {% endwith %}
 
-  <!-- Main layout -->
+  <!-- ═══════════ CONTENIDO PRINCIPAL ═══════════ -->
   {% block body %}{% endblock %}
 
-  <!-- Chatbot -->
-  <div id="chatbot-trigger" class="fixed bottom-6 right-6 z-30">
-    <button onclick="toggleChatbot()" class="boton-chat w-14 h-14 rounded-full shadow-lg hover:shadow-2xl transition flex items-center justify-center text-2xl bg-[#0055d4] hover:bg-[#0078ff] border border-white/30" aria-label="Abrir chatbot asistente">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s5 3.582 5 8z" />
-      </svg>
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="site-footer mt-auto" id="contacto">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Colegio Evangelico Shalom</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
+            Formando líderes con excelencia académica, valores cristianos y visión tecnológica para el futuro.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-btn" aria-label="Facebook">📘</a>
+            <a href="#" class="social-btn" aria-label="Instagram">📷</a>
+            <a href="#" class="social-btn" aria-label="YouTube">▶️</a>
+            <a href="#" class="social-btn" aria-label="WhatsApp">💬</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Enlaces Rápidos</h4>
+          <a href="#inicio">Inicio</a>
+          <a href="#nosotros">Nosotros</a>
+          <a href="#oferta">Oferta Académica</a>
+          <a href="#admisiones">Admisiones</a>
+          <a href="#eventos">Eventos</a>
+          <a href="{{ url_for('portal_estudiantil', _external=True) }}">Portal Estudiantil</a>
+        </div>
+        <div class="footer-col">
+          <h4>Oferta Académica</h4>
+          <a href="#nivel-inicial">Nivel Inicial</a>
+          <a href="#primaria">Primaria</a>
+          <a href="#secundaria">Secundaria</a>
+          <a href="#tecnico">Técnico-Profesional</a>
+          <a href="#admisiones">Proceso de Admisión</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <p>📍 Av. Principal #123, Ciudad</p>
+          <p>📞 +1 (809) 555-0100</p>
+          <p>📧 info@colegioevangelicoshalomrd.com</p>
+          <p style="margin-top:8px;"><span class="text-cyan" style="font-weight:500;">Horario:</span> Lun-Vie 7:30 AM - 4:00 PM</p>
+        </div>
+      </div>
+
+      <!-- Mapa interactivo (placeholder) -->
+      <div class="glass" style="padding:12px;border-radius:var(--radius-md);margin-bottom:20px;border-color:rgba(57,255,20,0.15);background:rgba(57,255,20,0.03);">
+        <div class="flex" style="align-items:center;gap:12px;">
+          <span style="font-size:1.2rem;">📍</span>
+          <div style="flex:1;font-size:0.82rem;color:var(--text-secondary);">
+            <strong style="color:var(--text-primary);display:block;margin-bottom:2px;">Ubicación</strong>
+            Av. Principal #123, entre calle 45 y 46, Ciudad, República Dominicana
+          </div>
+          <a href="https://maps.google.com/?q=Colegio+Evangelico+Shalom" target="_blank" class="btn btn-outline btn-sm" rel="noopener">Abrir mapa →</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Colegio Evangelico Shalom. Todos los derechos reservados. | Político Comercio y Marketing Digital · Beta 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════ CHATBOT CYBER FLOTANTE ═══════════ -->
+  <div id="chatbot-trigger">
+    <button id="chat-toggle-btn" class="chat-trigger-btn" aria-label="Abrir asistente virtual" title="Asistente virtual">
+      💬
     </button>
   </div>
 
-  <div class="chatbot-panel">
+  <div id="chatbot-panel" class="chatbot-panel">
     <div class="chatbot-header">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-navy flex items-center justify-center text-white font-bold shadow-lg" style="background: #1e3a5f;">CS</div>
-        <div>
-          <div class="font-semibold text-sm text-white">Cardinal Shalom Asistente</div>
-          <div class="text-xs text-slate-300">Chatea conmigo para navegar</div>
-        </div>
-        <button onclick="toggleChatbot()" class="ml-auto text-slate-400 hover:text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-        </button>
+      <div class="chatbot-avatar">CS</div>
+      <div>
+        <div class="chatbot-name">Cardinal Shalom Asistente</div>
+        <div class="chatbot-sub">IA · Respuestas instantáneas</div>
+      </div>
+      <button id="chat-close-btn" class="chatbot-close" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="chatbot-body" id="chatbot-messages">
+      <div class="chat-msg bot">
+        ¡Hola! Soy el asistente virtual del Colegio Evangelico Shalom.<br>
+        Pregúntame sobre admisiones, oferta académica, eventos, uniformes o lo que necesites.
+        <br><br>
+        <span style="font-size:0.75rem;color:var(--text-muted);">Presiona los botones rápidos o escribe tu pregunta.</span>
       </div>
     </div>
-    <div class="chatbot-body">
-      <div class="chatbot-message bot-message mb-3">
-        <p class="text-sm text-slate-300">¡Hola! Soy el asistente de Cardinal Shalom. Pregúntame sobre la plataforma o usa los bots rápidos.</p>
-      </div>
-      <div id="chatbot-messages"></div>
-    </div>
-    <div class="chatbot-quick-actions">
-      <button onclick="sendQuick('libros')" class="quick-btn">📚 Libros</button>
-      <button onclick="sendQuick('tarea')" class="quick-btn">📝 Tareas</button>
-      <button onclick="sendQuick('ranking')" class="quick-btn">🏆 Ranking</button>
-      <button onclick="sendQuick('notas')" class="quick-btn">📊 Notas</button>
+    <div class="chatbot-quick" id="chat-quick-actions">
+      <button class="quick-btn" data-q="¿Cómo me inscribo?">🎓 Inscripción</button>
+      <button class="quick-btn" data-q="¿Qué niveles ofrecen?">📚 Niveles</button>
+      <button class="quick-btn" data-q="Horario de admisiones">📅 Admisiones</button>
+      <button class="quick-btn" data-q="Catálogo de uniformes">👕 Uniformes</button>
+      <button class="quick-btn" data-q="Contacto">📞 Contacto</button>
     </div>
     <div class="chatbot-input-area">
-      <input id="chatbot-input" type="text" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter'){sendChatbot()};" class="chatbot-input">
-      <button onclick="sendChatbot()" class="chatbot-send">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.78 4.22a1 1 0 11-1.41-1.41L9 12.41 7.72 11.13a1 1 0 011.41-1.41L10 11.09l1.28-1.29a1 1 0 111.41 1.41L11.41 12.41l1.29 1.28a1 1 0 01-1.41 1.41L10 13.59l-1.28 1.29a1 1 0 01-1.41-1.41L8.72 11.13 10 12.41z" clip-rule="evenodd"/></svg>
+      <input
+        id="chatbot-input"
+        class="chatbot-input"
+        type="text"
+        placeholder="Escribe tu pregunta..."
+        autocomplete="off"
+      >
+      <button id="chat-send-btn" class="chatbot-send" aria-label="Enviar">
+        ➤
       </button>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="mt-auto py-8 px-6 text-center text-sm text-slate-400">
-    <div class="container">
-      <div class="logo-icon" style="width:32px;height:32px;font-size:0.8rem;margin:0 auto 0.5rem;">CS</div>
-      <p style="margin-bottom:0.25rem;">Cardinal Shalom — Plataforma Educativa Integral</p>
-      <p style="font-size:0.7rem;color:var(--slate);">Politecnico Comercio y Marketing Digital · Beta 2026</p>
-    </div>
-  </footer>
-
+  <!-- ═══════════ SCRIPTS ═══════════ -->
   <script src="/static/js/globals.js"></script>
   <script src="/static/js/websocket.js"></script>
   <script>
-    function toggleChatbot() {
+    (function() {
       const panel = document.getElementById('chatbot-panel');
-      panel.classList.toggle('chatbot-panel-open');
-    }
-    function sendQuick(keyword) {
+      const trigger = document.getElementById('chat-toggle-btn');
+      const closeBtn = document.getElementById('chat-close-btn');
+      const sendBtn = document.getElementById('chat-send-btn');
       const input = document.getElementById('chatbot-input');
-      input.value = keyword;
-      sendChatbot();
-    }
-    function sendChatbot() {
-      const input = document.getElementById('chatbot-input');
-      const query = input.value.trim();
-      if (!query) return;
-      const msgs = document.getElementById('chatbot-messages');
-      msgs.innerHTML += `<div class="chatbot-message user-message mb-2"><p>${query}</p></div>`;
-      input.value = '';
-      msgs.scrollTop = msgs.scrollHeight;
-      fetch('{{ url_for("chatbot_query", _external=False) }}', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'query=' + encodeURIComponent(query)
-      }).then(r => r.json()).then(data => {
-        msgs.innerHTML += `<div class="chatbot-message bot-message mb-3"><p>${data.response}</p></div>`;
-        if (data.actions && data.actions.length) {
-          msgs.innerHTML += `<div class="chatbot-actions mt-2">`;
-          data.actions.forEach(a => {
-            msgs.innerHTML += `<a href="${a.url}" class="inline-block ml-1 mt-1 text-xs bg-[#0055d4] text-white px-3 py-1 rounded-full hover:bg-[#0078ff] transition">${a.label}</a>`;
-          });
-          msgs.innerHTML += `</div>`;
+      const messages = document.getElementById('chatbot-messages');
+      const quickBtns = document.querySelectorAll('.quick-btn');
+
+      function toggle() {
+        panel.classList.toggle('open');
+        trigger.classList.toggle('active');
+      }
+
+      function addMsg(text, type) {
+        const div = document.createElement('div');
+        div.className = 'chat-msg ' + (type === 'user' ? 'user' : 'bot');
+        div.innerHTML = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function sendQuery(query) {
+        if (!query.trim()) return;
+        addMsg(escapeHtml(query), 'user');
+        input.value = '';
+
+        // Deep links simulados (RAG: respuesta contextual + botones de acceso directo)
+        const deepLinks = {
+          'inscripcion': {
+            reply: 'Para inscribirte, completa el <b>formulario de admisión en línea</b>. Se requiere copia de acta de nacimiento, certificado escolar y fotografía.',
+            links: [
+              { label: 'Formulario de admisión →', url: '#admisiones' },
+              { label: 'Requisitos →', url: '#admisiones' },
+              { label: 'Costos y planes →', url: '#admisiones' }
+            ]
+          },
+          'niveles': {
+            reply: 'Ofrecemos tres niveles educativos: <b>Nivel Inicial</b> (3-5 años), <b>Primaria</b> (1°-6°) y <b>Secundaria / Técnico-Profesional</b> (7°-12°).',
+            links: [
+              { label: 'Nivel Inicial →', url: '#nivel-inicial' },
+              { label: 'Primaria →', url: '#primaria' },
+              { label: 'Secundaria →', url: '#secundaria' }
+            ]
+          },
+          'admisiones': {
+            reply: 'El proceso de admisión está abierto. Revisa los requisitos y completa el formulario. ¡Plazas limitadas!',
+            links: [
+              { label: 'Ver requisitos →', url: '#admisiones' },
+              { label: 'Inscribirse ahora →', url: '#admisiones' }
+            ]
+          },
+          'uniformes': {
+            reply: 'Consulta nuestro <b>catálogo de uniformes</b>: polos, pantalones, abrigos, zapatos, útiles escolares y más. Filtra por género, nivel y categoría.',
+            links: [
+              { label: 'Ver catálogo →', url: '#catalogo' },
+              { label: 'Uniformes diarios →', url: '#catalogo' },
+              { label: 'Uniformes deporte →', url: '#catalogo' }
+            ]
+          },
+          'contacto': {
+            reply: '📍 Av. Principal #123, Ciudad<br>📞 +1 (809) 555-0100<br>📧 info@colegioevangelicoshalomrd.com<br>🕐 Lun-Vie 7:30 AM - 4:00 PM',
+            links: [
+              { label: 'Ubicación en mapa →', url: '#contacto' }
+            ]
+          },
+          'eventos': {
+            reply: 'Próximos eventos: <b>Jornada de Puertas Abiertas</b> (sábado), <b>Feria Científica</b> (mes próximo) y <b>Evaluaciones></b>.',
+            links: [
+              { label: 'Ver todos los eventos →', url: '#eventos' }
+            ]
+          }
+        };
+
+        // Detectar keywords
+        let matched = null;
+        const lower = query.toLowerCase();
+        if (lower.includes('inscrip') || lower.includes('admit') || lower.includes('matr') || lower.includes('ingres')) matched = deepLinks['inscripcion'];
+        else if (lower.includes('nivel') || lower.includes('grado') || lower.includes('cual')) matched = deepLinks['niveles'];
+        else if (lower.includes('admision') || lower.includes('requisito') || lower.includes('costo') || lower.includes('cuanto')) matched = deepLinks['admisiones'];
+        else if (lower.includes('uniform') || lower.includes('polos') || lower.includes('camisa') || lower.includes('pantalon') || lower.includes('catalogo')) matched = deepLinks['uniformes'];
+        else if (lower.includes('contact') || lower.includes('telefono') || lower.includes('email') || lower.includes('ubicacion') || lower.includes('donde')) matched = deepLinks['contacto'];
+        else if (lower.includes('evento') || lower.includes('calendario') || lower.includes('actividad')) matched = deepLinks['eventos'];
+        else {
+          addMsg('No encontré una respuesta exacta. Prueba con: <i>"inscripción"</i>, <i>"niveles"</i>, <i>"uniformes"</i>, <i>"contacto"</i> o <i>"eventos"</i>.', 'bot');
+          return;
         }
-        msgs.scrollTop = msgs.scrollHeight;
+
+        // Respuesta con deep links
+        addMsg(matched.reply, 'bot');
+        if (matched.links && matched.links.length) {
+          const actionsDiv = document.createElement('div');
+          actionsDiv.className = 'chat-actions';
+          matched.links.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.className = 'chat-action-btn';
+            a.textContent = link.label;
+            a.onclick = function(e) {
+              // Smooth scroll a la sección
+              const target = document.querySelector(link.url);
+              if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Cerrar chatbot al navegar
+                setTimeout(toggle, 600);
+              }
+              addMsg('🧭 Navegando a: ' + link.label, 'bot');
+            };
+            actionsDiv.appendChild(a);
+          });
+          messages.appendChild(actionsDiv);
+          messages.scrollTop = messages.scrollHeight;
+        }
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      trigger.addEventListener('click', toggle);
+      closeBtn.addEventListener('click', toggle);
+      sendBtn.addEventListener('click', function() { sendQuery(input.value); });
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') sendQuery(input.value);
       });
-    }
+      quickBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          sendQuery(this.getAttribute('data-q'));
+        });
+      });
+    })();
   </script>
   {% block extra_js %}{% endblock %}
 </body>
